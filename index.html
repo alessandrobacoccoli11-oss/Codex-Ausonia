@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="L'archivio del mondo della Madre: ere, eventi, fedi, luoghi e casate.">
+<meta name="theme-color" content="#25437F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Codex">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Codex di Ausonia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IM+Fell+English+SC&display=swap">
+<style>
+/* Layout: un foglio di codice miniato. Indice a sinistra come la colonna delle rubriche, lettura a destra dentro una cornice dorata; su telefono l'indice diventa una fascia. */
+:root{
+  --vellum:#EEE2C6; --folio:#F6EDD7; --ink:#2B1F16; --muted:#6C5842; --line:#CDB88E;
+  --rubric:#A3281C; --rubric-soft:#F1D9CC; --lapis:#25437F; --lapis-soft:#DCE0EC; --gold:#B5862A; --gold-hi:#D9B45A;
+  --f-display:"Uncial Antiqua", "Palatino Linotype", Georgia, serif;
+  --f-body:"EB Garamond", Garamond, Georgia, "Times New Roman", serif;
+  --f-rubric:"IM Fell English SC", "EB Garamond", Georgia, serif;
+  --grain-op:.07; --grain-blend:multiply;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --vellum:#1A150F; --folio:#231C14; --ink:#EBDDBE; --muted:#AB977B; --line:#4B3D2B;
+  --rubric:#E27561; --rubric-soft:#3A221B; --lapis:#94ACE2; --lapis-soft:#212A44; --gold:#D3A84F; --gold-hi:#E8C677;
+  --grain-op:.10; --grain-blend:screen; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --vellum:#1A150F; --folio:#231C14; --ink:#EBDDBE; --muted:#AB977B; --line:#4B3D2B;
+  --rubric:#E27561; --rubric-soft:#3A221B; --lapis:#94ACE2; --lapis-soft:#212A44; --gold:#D3A84F; --gold-hi:#E8C677;
+  --grain-op:.10; --grain-blend:screen; color-scheme:dark}
+html,body{background:var(--vellum)}
+body{color:var(--ink);font-family:var(--f-body);font-size:19px;line-height:1.6;position:relative}
+/* grana della pergamena */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:var(--grain-op);mix-blend-mode:var(--grain-blend);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:var(--lapis)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.wrap{position:relative;z-index:1;display:grid;grid-template-columns:240px minmax(0,1fr);gap:36px;max-width:1200px;margin:0 auto;padding-inline:24px;padding-block:28px 64px}
+
+/* fregio: un nastro di rombi e punti, colorato dal tema tramite maschera */
+.fregio{height:14px;background:var(--gold);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M14 1 L21 7 L14 13 L7 7Z' fill='black'/%3E%3Ccircle cx='0' cy='7' r='2' fill='black'/%3E%3Ccircle cx='28' cy='7' r='2' fill='black'/%3E%3Crect y='6.4' width='28' height='1.2' fill='black'/%3E%3C/svg%3E") repeat-x center/28px 14px;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M14 1 L21 7 L14 13 L7 7Z' fill='black'/%3E%3Ccircle cx='0' cy='7' r='2' fill='black'/%3E%3Ccircle cx='28' cy='7' r='2' fill='black'/%3E%3Crect y='6.4' width='28' height='1.2' fill='black'/%3E%3C/svg%3E") repeat-x center/28px 14px}
+
+/* colonna delle rubriche */
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;display:flex;flex-direction:column;gap:16px;padding-right:22px;border-right:3px double var(--gold)}
+.brand{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink)}
+.brand b{font-family:var(--f-display);font-weight:400;font-size:32px;line-height:1.05}
+.brand b::first-letter{color:var(--rubric)}
+.brand span{font-family:var(--f-rubric);font-size:15px;color:var(--rubric);letter-spacing:.06em}
+.search{width:100%;box-sizing:border-box;padding:7px 12px;border:1px solid var(--line);border-radius:2px;background:var(--folio);font-size:17px}
+.nav{display:flex;flex-direction:column;gap:0}
+.nav button{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:8px;padding:5px 6px 5px 20px;position:relative;font-family:var(--f-rubric);font-size:17px;letter-spacing:.02em}
+.nav button::before{content:"";position:absolute;left:5px;top:50%;width:6px;height:6px;margin-top:-3px;transform:rotate(45deg);background:var(--line)}
+.nav button:hover{color:var(--rubric)}
+.nav button:hover::before{background:var(--rubric)}
+.nav button[aria-current="true"]{color:var(--rubric)}
+.nav button[aria-current="true"]::before{background:var(--gold);box-shadow:0 0 0 2px var(--rubric-soft)}
+.nav button em{font-style:normal;font-family:var(--f-body);color:var(--muted);font-variant-numeric:oldstyle-nums tabular-nums}
+.owner-tools{display:flex;flex-direction:column;gap:10px;padding-top:6px}
+.btn{cursor:pointer;border:1px solid var(--rubric);background:transparent;color:var(--rubric);border-radius:2px;padding:6px 16px;font-family:var(--f-rubric);font-size:16px;letter-spacing:.03em}
+.btn:hover{background:var(--rubric-soft)}
+.btn.primary{background:var(--lapis);border:1px solid var(--gold);color:var(--folio);box-shadow:inset 0 0 0 2px var(--lapis),inset 0 0 0 3px var(--gold-hi)}
+.btn.primary:hover{filter:brightness(1.1);background:var(--lapis)}
+.btn.danger{color:var(--rubric);border-color:var(--rubric)}
+.legend{font-size:15px;font-style:italic;color:var(--muted);line-height:1.45;margin:0}
+
+/* il foglio */
+main{min-width:0}
+.view,.editor{position:relative;background:var(--folio);border:1px solid var(--ink);outline:1px solid var(--gold);outline-offset:-7px;padding:44px 48px 40px}
+.view::before,.view::after,.editor::before,.editor::after{content:"";position:absolute;width:12px;height:12px;background:var(--gold);transform:rotate(45deg);top:-7px}
+.view::before,.editor::before{left:-7px}
+.view::after,.editor::after{right:-7px}
+.eyebrow{font-family:var(--f-rubric);font-size:17px;color:var(--rubric);letter-spacing:.05em;margin:0}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;color:var(--ink)}
+h1{font-size:46px;line-height:1.08}
+h1::first-letter{color:var(--rubric)}
+h2{font-size:30px;line-height:1.15;display:flex;align-items:center;gap:14px}
+h2::after{content:"";flex:1;height:14px;background:var(--gold);opacity:.85;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M14 1 L21 7 L14 13 L7 7Z' fill='black'/%3E%3Crect y='6.4' width='28' height='1.2' fill='black'/%3E%3C/svg%3E") repeat-x center/28px 14px;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M14 1 L21 7 L14 13 L7 7Z' fill='black'/%3E%3Crect y='6.4' width='28' height='1.2' fill='black'/%3E%3C/svg%3E") repeat-x center/28px 14px}
+h3{font-size:24px;line-height:1.2}
+.lede{font-size:21px;font-style:italic;color:var(--muted);max-width:58ch;margin:12px 0 0}
+.section{display:flex;flex-direction:column;gap:18px;margin-top:40px}
+
+/* cronologia */
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.era{display:grid;grid-template-columns:110px minmax(0,1fr);gap:20px;padding-block:18px;border-top:1px solid var(--line)}
+.era:first-child{border-top:none}
+.era-n{font-family:var(--f-rubric);font-size:15px;color:var(--muted)}
+.era-n b{display:block;font-family:var(--f-display);font-weight:400;font-size:38px;line-height:1;color:var(--rubric)}
+.era h3 button{all:unset;cursor:pointer}
+.era h3 button:hover{color:var(--rubric)}
+.era p{margin:4px 0 0;color:var(--muted);font-style:italic;max-width:60ch}
+.events{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.chip{all:unset;cursor:pointer;display:inline-flex;align-items:center;padding:2px 12px;border:1px solid var(--gold);border-radius:2px;font-size:16px;background:var(--vellum)}
+.chip:hover{color:var(--rubric);border-color:var(--rubric)}
+.chip.priv{border-style:dashed;border-color:var(--rubric);color:var(--rubric)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.cat{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1px solid var(--line);border-top:3px double var(--gold);background:var(--vellum)}
+.cat:hover{border-color:var(--rubric)}
+.cat:hover b{color:var(--rubric)}
+.cat b{font-family:var(--f-display);font-weight:400;font-size:21px}
+.cat span{font-size:15px;color:var(--muted);font-style:italic}
+
+/* elenco */
+.list{list-style:none;margin:0;padding:0}
+.list li{border-bottom:1px solid var(--line)}
+.list button{all:unset;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;width:100%;padding:12px 4px 12px 24px;box-sizing:border-box;position:relative}
+.list button::before{content:"\00B6";position:absolute;left:2px;top:13px;color:var(--rubric);font-size:18px}
+.list button:hover b{color:var(--rubric)}
+.list b{font-family:var(--f-display);font-weight:400;font-size:21px}
+.list span{color:var(--muted);font-size:17px;font-style:italic}
+
+/* voce */
+article.view{display:flex;flex-direction:column;gap:22px}
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.crumbs button{all:unset;cursor:pointer;font-family:var(--f-rubric);font-size:17px;color:var(--rubric)}
+.crumbs button:hover{text-decoration:underline}
+.sub{font-style:italic;color:var(--muted);font-size:21px;margin:6px 0 0}
+.badge{font-family:var(--f-rubric);font-size:14px;padding:1px 9px;border:1px dashed var(--rubric);color:var(--rubric);border-radius:2px}
+dl.fields{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 20px;margin:0;padding:14px 20px;border-left:4px double var(--gold);background:var(--vellum)}
+dl.fields dt{font-family:var(--f-rubric);font-size:16px;color:var(--rubric);padding-top:2px}
+dl.fields dd{margin:0}
+.text{max-width:66ch}
+.text p{margin:0 0 14px;text-align:justify;hyphens:auto}
+.text p:first-child::first-letter{font-family:var(--f-display);float:left;font-size:3.1em;line-height:1;margin:6px 12px 0 0;padding:6px 12px 8px;color:var(--gold-hi);background:var(--lapis);border:2px solid var(--gold);box-shadow:0 0 0 3px var(--folio),0 0 0 4px var(--rubric)}
+.text a,.fields a{color:var(--lapis);text-decoration:none;border-bottom:1px solid var(--gold);cursor:pointer}
+.text a:hover,.fields a:hover{color:var(--rubric);border-bottom-color:var(--rubric)}
+a.missing{color:var(--muted);border-bottom-style:dotted}
+.related{display:flex;flex-direction:column;gap:8px}
+.related h4{margin:0;font-family:var(--f-rubric);font-size:17px;color:var(--rubric);font-weight:400}
+.related div{display:flex;flex-wrap:wrap;gap:6px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.secret{display:flex;flex-direction:column;gap:10px;padding:14px 20px;border:1px dashed var(--rubric);background:var(--rubric-soft)}
+.secret .eyebrow{color:var(--rubric)}
+.secret p{margin:0;white-space:pre-wrap}
+.secret ul{margin:0;padding-left:22px}
+.empty{padding:28px;border:1px dashed var(--line);color:var(--muted);font-style:italic;max-width:60ch;background:var(--folio)}
+.note{font-size:16px;color:var(--muted)}
+
+/* editor */
+.editor{display:flex;flex-direction:column;gap:16px}
+.editor label{display:flex;flex-direction:column;gap:4px;font-family:var(--f-rubric);font-size:16px;color:var(--rubric)}
+.editor input,.editor select,.editor textarea{font-family:var(--f-body);font-size:18px;padding:8px 10px;border:1px solid var(--line);border-radius:2px;background:var(--vellum);color:var(--ink)}
+.editor textarea{min-height:90px;resize:vertical;line-height:1.5}
+#ed-testo{min-height:220px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.linkpick{display:flex;flex-direction:column;gap:6px}
+.linkbox{max-height:220px;overflow:auto;border:1px solid var(--line);background:var(--vellum);padding:6px 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px 12px}
+.linkbox label{flex-direction:row;align-items:center;gap:6px;font-family:var(--f-body);font-size:16px;color:var(--ink)}
+fieldset.secret{margin:0}
+fieldset.secret legend{font-family:var(--f-rubric);font-size:17px;color:var(--rubric);padding:0 6px}
+.radio{display:flex;flex-wrap:wrap;gap:16px}
+.radio label{flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-family:var(--f-body)}
+.msg{font-size:16px}
+.msg.err{color:var(--rubric)}
+.confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--rubric)}
+
+.affresco{margin:0;display:flex;flex-direction:column;gap:10px}
+.affresco svg{display:block;width:100%;height:auto;max-width:100%;box-shadow:0 2px 0 var(--line),0 10px 24px -14px rgba(40,25,10,.55)}
+.affresco figcaption{font-style:italic;color:var(--muted);font-size:17px;text-align:center}
+.affresco figcaption span{font-style:normal;font-family:var(--f-rubric);color:var(--rubric)}
+@media (max-width:820px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:20px;padding-inline:16px;padding-block:16px 48px}
+  .side{position:static;padding-right:0;border-right:none;border-bottom:3px double var(--gold);padding-bottom:12px}
+  .nav{flex-direction:row;overflow-x:auto;gap:2px;padding-bottom:4px}
+  .nav button{white-space:nowrap}
+  .view,.editor{padding:32px 20px 28px}
+  h1{font-size:34px}
+  .era{grid-template-columns:minmax(0,1fr);gap:4px}
+  .era-n b{display:inline;font-size:26px;margin-right:6px}
+  dl.fields{grid-template-columns:minmax(0,1fr)}
+  dl.fields dd{margin-bottom:6px}
+  .text p{text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){.view{animation:in .3s ease-out}@keyframes in{from{opacity:.5}to{opacity:1}}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <a class="brand" href="#" id="home-link"><b>Codex di Ausonia</b><span>Archivio del mondo</span></a>
+    <div class="fregio" aria-hidden="true"></div>
+    <input class="search" id="search" type="search" placeholder="Cerca nel codex" aria-label="Cerca nel codex">
+    <nav class="nav" id="nav" aria-label="Sezioni"></nav>
+  </aside>
+  <main id="main"><div class="empty">Apertura del codex…</div></main>
+</div>
+
+<script>
+(function(){
+const TIPI=[
+ {k:'era',label:'Ere',sing:'Era',desc:'Le epoche del mondo, dal Grembo a oggi'},
+ {k:'evento',label:'Eventi',sing:'Evento',desc:'I fatti che hanno segnato le ere'},
+ {k:'essere',label:'La Madre e i suoi figli',sing:'Divinità',desc:'La Madre, Egli, Vha-El e i Beati'},
+ {k:'beato',label:'Beati',sing:'Beato',desc:'I Beati ricordati per nome'},
+ {k:'fede',label:'Fedi',sing:'Fede',desc:'L’Ordine, il Culto del Padre, i Lealisti'},
+ {k:'ordine',label:'Gerarchia dell’Ordine',sing:'Grado dell’Ordine',desc:'Dal Privo ai Vicari di Cappella'},
+ {k:'credenza',label:'Credenze e usi',sing:'Credenza',desc:'Aldilà, calendario, sangue e orfani'},
+ {k:'luogo',label:'Luoghi',sing:'Luogo',desc:'Il regno, le province, i luoghi sacri'},
+ {k:'casata',label:'Casate',sing:'Casata',desc:'Le famiglie che governano'},
+ {k:'personaggio',label:'Personaggi',sing:'Personaggio',desc:'Uomini e donne del presente'},
+ {k:'reliquia',label:'Reliquie',sing:'Reliquia',desc:'Oggetti sopravvissuti all’Era Antica'}
+];
+const TIPO=Object.fromEntries(TIPI.map(t=>[t.k,t]));
+const ROMAN=['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
+const DATA={"esilio-egli": {"campi": [], "link": [], "ordine": 1.4, "sottotitolo": "La Madre si divide in tre", "testo": "Al termine della battaglia la Madre non riuscì a recuperare le forze. Con il potere che le restava, narrano le fonti, scacciò [[egli|Egli]] nelle profondità della realtà, dove egli rimane isolato ed esiliato.\n\nCompiuto ciò, la Madre divise il proprio spirito in tre parti sopite, destinate a crescere e a nascere nel tempo per governare il suo regno: sono i [[tre-figli|tre figli]], la cui attesa scandisce il [[calendario-sacro|calendario sacro]].\n\nDa quel giorno il figlio della Madre non fu più chiamato con il suo nome, ma soltanto Egli. Con questi eventi si chiude l'[[era-antica|Era Antica]].", "tipo": "evento", "titolo": "L'esilio di Egli"}, "verbana": {"campi": [["Dono", "La lingua comune"], ["Opera", "L'elenco dei Beati che combatterono con Vha-El"], ["Legami", "Collaborò con [[iasia|Iasia]]"], ["Fine", "Gli ultimi anni nel silenzio"]], "link": [], "ordine": null, "sottotitolo": "La Beata della Parola Comune", "testo": "Verbana è la Beata a cui la tradizione attribuisce la Parola Comune. Le fonti la descrivono curiosa e paziente, più incline ad ascoltare che a parlare.\n\nNella [[battaglia-isola|battaglia contro Egli]] non combatté. A lei si deve tuttavia il primo elenco della storia: Verbana mandò a memoria i nomi di quanti si schierarono con [[vha-el|Vha-El]] e li recitò per tutta la vita, finché [[iasia|Iasia]] non li fissò per iscritto. È grazie a lei che di [[amatus|Amatus]], [[titius|Titius]], [[vibius|Vibius]], [[etia|Etia]], [[ionide|Ionide]], [[meleagrus|Meleagrus]] e [[aurelianos|Aurelianos]] si conserva almeno il nome.\n\nNegli [[anni-crepuscolo|Anni del Crepuscolo]] percorse i villaggi, ne apprese tutti i dialetti e da essi trasse la Parola Comune, che prese il posto delle parlate locali. Con Iasia redasse le prime leggi: Verbana ne dettò le parole, Iasia le fissò nei segni.\n\nNegli ultimi anni smise di parlare, e le fonti non ne spiegano la ragione. Alcuni studiosi vi hanno visto l'origine lontana del mutismo imposto al [[privo|Privo]].\n\nIl giorno in cui un bambino pronuncia la prima parola si festeggia ancora la «voce di Verbana».", "tipo": "beato", "titolo": "Verbana"}, "era-antica": {"campi": [], "link": [], "ordine": 1, "sottotitolo": "Il tempo del Grembo, fino al Deicidio", "testo": "Con il nome di Era Antica gli storici designano il tempo che precede il Deicidio, del quale nessuna cronaca umana conserva memoria diretta. Quanto se ne sa proviene dalle testimonianze dei primi [[i-beati|Beati]] giunti sulla terra, tramandate e in seguito interpretate dai Maestri dell'[[ordine-madre|Ordine]].\n\nSecondo tali fonti, la [[la-madre|Madre]] dimorava allora con i Beati, suoi figli, nel [[grembo|Grembo]]. Sulla terra vivevano gli uomini, anch'essi figli della Madre ma privi della natura beata, in una condizione che i dotti paragonano a quella dei popoli più primitivi: senza città, senza scrittura, senza una lingua comune.\n\nL'era si chiude con tre eventi che le fonti narrano in rapida successione: il [[deicidio|Deicidio]], la [[battaglia-isola|battaglia contro Egli]] e l'[[esilio-egli|esilio di Egli]], cui seguì la divisione dello spirito della Madre.", "tipo": "era", "titolo": "L'Era Antica"}, "tecton": {"campi": [["Dono", "Le costruzioni"], ["Opera", "Il muro attorno alla Madre; le mura più antiche di [[badia-antica|Badia Antica]]"], ["Legami", "Rivale di [[arator|Arator]]"], ["Fine", "Sepolto sotto le fondamenta della sua ultima opera"], ["Discendenza rivendicata", "Le grandi famiglie cittadine"]], "link": [], "ordine": null, "sottotitolo": "Il primo costruttore", "testo": "Tecton fu il primo costruttore tra i [[i-beati|Beati]]. Le fonti lo ricordano ambizioso e orgoglioso, uso a pensare in grande e in pietra.\n\nDurante i venti giorni sull'[[isola-madre|isola]], mentre [[theron|Theron]] forgiava le armi, Tecton levò un muro di pietre a secco attorno al corpo della [[la-madre|Madre]].\n\nNegli [[anni-crepuscolo|Anni del Crepuscolo]] fondò i primi insediamenti ufficiali, e la tradizione gli attribuisce le mura più antiche di [[badia-antica|Badia Antica]].\n\nCelebre fu la sua rivalità con [[arator|Arator]]: la città contro la campagna, la pietra contro il solco. La loro contesa è passata in proverbio.\n\nVolle essere sepolto sotto le fondamenta della sua ultima costruzione, di cui oggi si ignora il luogo. Ancora ai nostri giorni i muratori pongono una moneta «per Tecton» sotto la prima pietra di ogni edificio. Le grandi famiglie cittadine ne rivendicano la discendenza.", "tipo": "beato", "titolo": "Tecton"}, "presbiteri": {"campi": [], "link": ["ordine-madre"], "ordine": 3, "sottotitolo": "I sacerdoti dell'Ordine", "testo": "I Presbiteri svolgono il ministero ordinario dell'Ordine: guidano le comunità dei fedeli, come un sacerdote.\n\nOgni Presbitero è affiancato da almeno un [[vicari-cappella|Vicario di Cappella]]. Dopo molti anni di servizio, un Presbitero può chiedere di essere ammesso tra i [[maestri-madre|Maestri della Madre]].", "tipo": "ordine", "titolo": "I Presbiteri"}, "fiordalisi": {"campi": [["Sede", "[[villabranda|Villabranda]]"], ["Capo", "Re [[valeriano-fiordalisi|Valeriano Fiordalisi]]"]], "link": ["fiordalisi-belforte"], "ordine": 1, "sottotitolo": "La casata reale", "testo": "La casata Fiordalisi regna sul [[ausonia|Regno di Ausonia]] dalla capitale [[villabranda|Villabranda]], e ne è capo Re [[valeriano-fiordalisi|Valeriano Fiordalisi]]. Un ramo della famiglia governa la provincia di [[belforte|Belforte]].", "tipo": "casata", "titolo": "Casata Fiordalisi"}, "anni-secondogenita": {"campi": [], "link": ["tre-figli"], "ordine": 4, "sottotitolo": "L'era presente", "testo": "Gli Anni della Secondogenita costituiscono l'era presente. Essa ebbe inizio quando i Maestri dell'[[ordine-madre|Ordine]] attribuirono la nascita della Secondogenita, secondo frammento dello spirito della [[la-madre|Madre]], alla conclusione di un grande conflitto.\n\nSotto quest'era si svolge la storia recente del [[ausonia|Regno di Ausonia]].", "tipo": "era", "titolo": "Gli Anni della Secondogenita"}, "ordine-madre": {"campi": [["Sede", "[[badia-antica|Badia Antica]]"], ["Guida", "Il [[privo|Privo]]"], ["Esercito", "[[monaci-guerrieri|Monaci Guerrieri]], 8000 uomini"]], "link": ["orfano-sacro"], "ordine": 1, "sottotitolo": "La fede più diffusa del regno", "testo": "L'Ordine Monastico della Madre è la fede più comune e importante del regno.\n\nIl suo fondamento è il culto della [[la-madre|Madre]]. Su un punto l'Ordine si distingue nettamente dalle altre fedi: esso nega l'esistenza di [[vha-el|Vha-El]] e insegna che la Madre generò i suoi figli da sola e da sola affrontò [[egli|Egli]].\n\nAll'Ordine spetta inoltre la custodia del [[calendario-sacro|calendario sacro]]: sono i suoi Maestri ad attribuire la nascita dei [[tre-figli|figli della Madre]], e con essa l'inizio di ogni nuova era. In questa prerogativa molti storici riconoscono la fonte più alta della sua autorità.\n\nLa gerarchia, dal grado più alto, comprende il [[privo|Privo]], gli [[auscultatori|Auscultatori]], i [[presbiteri|Presbiteri]], i [[maestri-madre|Maestri della Madre]] e i [[vicari-cappella|Vicari di Cappella]]; vi si aggiungono i [[monaci-guerrieri|Monaci Guerrieri]]. Una parte notevole dei suoi membri proviene dagli orfani che l'Ordine accoglie e cresce.", "tipo": "fede", "titolo": "L'Ordine Monastico della Madre"}, "anni-crepuscolo": {"campi": [], "link": ["sangue-beati"], "ordine": 2, "sottotitolo": "L'era senza dèi, in cui i Beati vissero tra gli uomini", "testo": "Gli Anni del Crepuscolo sono l'età in cui il mondo rimase privo di dèi. Le fonti li descrivono come un tempo di grandi doni e di lenta perdita.\n\nGiunti sulla terra, i [[i-beati|Beati]] superstiti persero l'immortalità e presero a vivere accanto agli uomini. Superiori a questi in ogni arte, ne divennero i maestri: a loro si devono le prime arti, la Parola Comune che soppiantò i dialetti dei villaggi e delle piccole regioni, e i primi insediamenti degni del nome di città. La tradizione conserva il ricordo di alcuni di questi maestri: [[verbana|Verbana]], [[tecton|Tecton]], [[theron|Theron]], [[arator|Arator]] e [[iasia|Iasia]].\n\nCon il passare delle generazioni i Beati si unirono agli uomini, e le fonti insistono nel dire che lo fecero per amore e non per calcolo. Da queste unioni la dottrina comune fa discendere le stirpi nobili del mondo; ma ogni generazione portò con sé una parte più piccola della natura beata, finché i tratti distintivi dei Beati andarono perduti.\n\nL'età si chiude con la [[guerra-fratricida|Grande Guerra Fratricida]].", "tipo": "era", "titolo": "Gli Anni del Crepuscolo"}, "lancia-vha-el": {"campi": [], "link": [], "ordine": 1, "sottotitolo": "La reliquia più famosa", "testo": "La Lancia di Vha-El è la più celebre reliquia della [[battaglia-isola|battaglia contro Egli]]. La tradizione narra che [[vha-el|Vha-El]] la creò di sua mano sull'[[isola-madre|isola]], e che la [[la-madre|Madre]] la benedisse rendendola indistruttibile.\n\nFu la sola arma dell'isola non forgiata da [[theron|Theron]].", "tipo": "reliquia", "titolo": "La Lancia di Vha-El"}, "ceius": {"campi": [["Dono", "La difesa dei villaggi"], ["Legami", "Compagno di [[vha-el|Vha-El]]"], ["Fine", "Caduto difendendo un villaggio di uomini"], ["Reliquia", "[[corno-ceius|Corno di Ceius]]"], ["Discendenza rivendicata", "Le famiglie di tradizione militare"]], "link": [], "ordine": null, "sottotitolo": "Il primo a seguire Vha-El", "testo": "Ceius è ricordato come il primo dei [[i-beati|Beati]] a seguire [[vha-el|Vha-El]], del quale fu, secondo la tradizione, l'amico più stretto e il solo che osasse contraddirlo. Le fonti lo descrivono impetuoso, generoso e dotato di una voce potente: un guerriero formidabile, di grande forza e carisma.\n\nSull'isola, quando i Beati appena divenuti mortali cedevano alla disperazione, fu il suo corno a riscuoterli. Nella [[battaglia-isola|battaglia contro Egli]] combatté al fianco di Vha-El.\n\nAl termine degli eventi guidò i quattrocento superstiti fuori dall'isola, e la tradizione vuole che sia stato il primo a mettere piede sul continente. Negli [[anni-crepuscolo|Anni del Crepuscolo]] insegnò agli uomini a difendere i villaggi: le palizzate, i turni di guardia, l'uso dello scudo.\n\nMorì in età avanzata, difendendo un villaggio di uomini da una banda di predoni, ed è perciò considerato il primo Beato caduto per gli uomini.\n\nIl suo corno si suona ancora alle incoronazioni e alle dichiarazioni di guerra. Singolare è la posizione dell'[[ordine-madre|Ordine]]: pur negando Vha-El, esso venera Ceius come primo custode della Madre, tacendo di chi egli fosse il seguace. Le famiglie di tradizione militare ne rivendicano il sangue.", "tipo": "beato", "titolo": "Ceius"}, "orfano-sacro": {"campi": [], "link": ["deicidio"], "ordine": 3, "sottotitolo": "Perché gli orfani sono rispettati", "testo": "Nel regno l'orfano gode di una considerazione quasi sacra. La ragione risale alle origini del mondo: morta la [[la-madre|Madre]], i suoi figli in terra, Beati o uomini, rimasero orfani, e ogni orfano ne rinnova la condizione. Per la stessa ragione l'uccisione della propria madre è ritenuta il più grave dei crimini, a immagine del [[deicidio|Deicidio]].\n\nGià [[iasia|Iasia]], secondo la tradizione, accoglieva i bambini rimasti senza genitori. L'[[ordine-madre|Ordine]] ne ha raccolto l'eredità: la maggior parte dei suoi [[vicari-cappella|Vicari di Cappella]] più giovani è composta da orfani o da bambini abbandonati.", "tipo": "credenza", "titolo": "L'orfano sacro"}, "fiordalisi-belforte": {"campi": [["Sede", "[[belforte|Belforte]]"]], "link": [], "ordine": 2, "sottotitolo": "Ramo della casata reale", "testo": "I Fiordalisi di Belforte sono il ramo della [[fiordalisi|casata reale]] cui è stata affidata la provincia di [[belforte|Belforte]], con il compito di difendere i confini del regno.", "tipo": "casata", "titolo": "I Fiordalisi di Belforte"}, "battaglia-isola": {"campi": [["Luogo", "[[isola-madre|Isola della Madre]]"], ["Guida", "[[vha-el|Vha-El]]"], ["Sopravvissuti", "Circa 400 Beati lasciarono l'isola dopo la battaglia"]], "link": [], "ordine": 1.3, "sottotitolo": "Vha-El e i Beati difendono la Madre", "testo": "Egli seguì la Madre fin sull'isola. Qui, secondo il racconto tramandato, [[vha-el|Vha-El]] radunò i Beati disperati, appena divenuti mortali. Il primo a schierarsi al suo fianco fu [[ceius|Ceius]], il cui corno, dicono le fonti, li riscosse dallo sconforto.\n\nPer venti giorni e venti notti i Beati si prepararono. [[theron|Theron]] forgiò per loro armi e armature; [[tecton|Tecton]] levò un muro di pietre a secco attorno al corpo della Madre; [[arator|Arator]] trovò il cibo con cui sfamarli, poiché per la prima volta essi conoscevano la fame. Vha-El, intanto, creava la propria Lancia.\n\nQuando Egli giunse, i Beati lo affrontarono. Insieme a Ceius combatterono [[amatus|Amatus]], [[titius|Titius]], [[vibius|Vibius]], [[etia|Etia]], [[ionide|Ionide]], [[meleagrus|Meleagrus]] e [[aurelianos|Aurelianos]], i cui nomi si sono conservati grazie a [[verbana|Verbana]], che li tenne a memoria. [[iasia|Iasia]] curò i feriti. Al culmine dello scontro Vha-El ed Egli si trovarono l'uno contro l'altro.\n\nDelle fasi della battaglia, oltre a quanto riferisce il libro sacro, si sa poco. Ne restano due reliquie celebri: la [[lancia-vha-el|Lancia di Vha-El]] e il [[corno-ceius|Corno di Ceius]]. Circa quattrocento Beati lasciarono l'isola al termine degli eventi.\n\nLa versione dell'[[ordine-madre|Ordine della Madre]] differisce in un punto essenziale: secondo i suoi Maestri fu la Madre sola ad affrontare Egli.", "tipo": "evento", "titolo": "La battaglia contro Egli"}, "deicidio": {"campi": [], "link": ["orfano-sacro"], "ordine": 1.2, "sottotitolo": "Egli uccide la Madre", "testo": "Il Deicidio è l'evento che pose fine all'Era Antica, ed è il più grave crimine di cui la storia serbi memoria.\n\nLe fonti narrano che [[egli|Egli]] scoprì il proposito della [[la-madre|Madre]] di generare altri figli. Temendo che il proprio potere venisse diviso e di divenire uno fra molti, volle farsi unico Assoluto. Uccise allora la Madre squarciandole il ventre; ne uscirono i [[i-beati|Beati]], ed Egli se ne nutrì per accrescere la propria potenza.\n\n[[vha-el|Vha-El]] era presente, ma non riuscì a fermarlo, poiché Egli era forte e astuto. Su questo punto i testi antichi sono reticenti, e il loro silenzio ha alimentato interpretazioni opposte.\n\nCon le ultime forze la Madre si trasferì nel piano terreno, su un'isola oggi nota come [[isola-madre|Isola della Madre]].", "tipo": "evento", "titolo": "Il Deicidio"}, "culto-padre": {"campi": [], "link": ["ordine-madre"], "ordine": 2, "sottotitolo": "I fedeli di Vha-El", "testo": "Il Culto del Padre raccoglie quanti venerano [[vha-el|Vha-El]] come vero eroe del mondo e suo salvatore.\n\nSecondo i suoi fedeli fu Vha-El a difendere la [[la-madre|Madre]] nella [[battaglia-isola|battaglia contro Egli]]. Sulla sua sorte il Culto non possiede certezze: non si sa se egli sia caduto nello scontro.\n\nIl Culto si oppone all'[[ordine-madre|Ordine della Madre]], che nega l'esistenza di Vha-El, e respinge al tempo stesso la pretesa dei [[lealisti|Lealisti]].", "tipo": "fede", "titolo": "Il Culto del Padre"}, "la-madre": {"campi": [], "link": ["ordine-madre", "aldila"], "ordine": 1, "sottotitolo": "La divinità principale", "testo": "La Madre è la divinità principale venerata nel regno e il fondamento di ogni fede conosciuta.\n\nSecondo le fonti, nel suo [[grembo|Grembo]] dimoravano i [[i-beati|Beati]], suoi figli; anche gli uomini erano suoi figli, ma privi della natura beata. Per dare ai Beati un mondo proprio si unì a [[vha-el|Vha-El]] e generò [[egli|Egli]], che più tardi la uccise nel [[deicidio|Deicidio]]. Prima di svanire, la Madre esiliò il figlio e divise il proprio spirito nei [[tre-figli|tre figli]].\n\nLa dottrina insegna che, quando i tre spiriti saranno riuniti, la Madre rinascerà e il Grembo guarirà. L'[[ordine-madre|Ordine Monastico della Madre]] respinge tuttavia la sua unione con Vha-El e sostiene che ella abbia generato i suoi figli da sola.", "tipo": "essere", "titolo": "La Madre"}, "badia-antica": {"campi": [["Stato", "Regno Monastico della Madre"], ["Vi risiedono", "Il [[privo|Privo]] e i 74 [[maestri-madre|Maestri della Madre]]"], ["Difesa", "[[monaci-guerrieri|Monaci Guerrieri]]"]], "link": [], "ordine": 4, "sottotitolo": "Isola sede dell'Ordine", "testo": "Badia Antica è l'isola su cui risiedono il [[privo|Privo]] e i settantaquattro [[maestri-madre|Maestri della Madre]]. È il cuore del Regno Monastico della Madre ed è difesa dai [[monaci-guerrieri|Monaci Guerrieri]].\n\nLa tradizione attribuisce a [[tecton|Tecton]] le sue mura più antiche, e vuole che gli archivi dell'[[ordine-madre|Ordine]] abbiano inizio dal libro di rimedi di [[iasia|Iasia]].", "tipo": "luogo", "titolo": "Badia Antica"}, "isola-madre": {"campi": [["Posizione", "All'estremo sud-est del mare che bagna la penisola"], ["Nome presso il popolo del sud", "Hamaret"]], "link": [], "ordine": 3, "sottotitolo": "Dove la Madre si rifugiò dopo il Deicidio", "testo": "L'Isola della Madre si trova all'estremo sud-est del mare che bagna la penisola. Il popolo del sud la chiama Hamaret.\n\nDopo il [[deicidio|Deicidio]] vi si rifugiò la [[la-madre|Madre]] con i [[i-beati|Beati]] superstiti. Vi si combatté la [[battaglia-isola|battaglia contro Egli]], e di qui circa quattrocento Beati partirono per il continente, guidati da [[ceius|Ceius]]. Per queste ragioni è considerata il luogo più sacro del mondo.", "tipo": "luogo", "titolo": "L'Isola della Madre"}, "sale-atemporali": {"campi": [], "link": ["aldila", "grembo"], "ordine": 2, "sottotitolo": "Dove attendono le anime dei giusti", "testo": "Le Sale Atemporali sono, secondo l'insegnamento dei Maestri, i resti incompiuti del [[paradiso-condiviso|paradiso]] che la [[la-madre|Madre]] stava edificando: sale costruite ma mai terminate, sospese fuori dal tempo perché l'opera si interruppe con il [[deicidio|Deicidio]].\n\nVi vagherebbero le anime dei giusti, in attesa del ritorno della Madre, alla cui rinascita il paradiso sarà compiuto.", "tipo": "luogo", "titolo": "Le Sale Atemporali"}, "belforte": {"campi": [["Governo", "Un ramo della casata [[fiordalisi-belforte|Fiordalisi]]"], ["Comuni", "Venzone, Roverano, Torriano, Ripanera"], ["Fortificazioni", "Forte Altacupa, Castel del Varco"]], "link": [], "ordine": 8, "sottotitolo": "Provincia di confine", "testo": "Belforte è una delle cinque province del [[ausonia|Regno di Ausonia]] e prende il nome dalla sua città principale, sede del potere provinciale. Il suo territorio comprende quattro comuni e due fortificazioni. È affidata a un ramo della casata reale, i [[fiordalisi-belforte|Fiordalisi di Belforte]], a difesa dei confini del regno.", "tipo": "luogo", "titolo": "Belforte"}, "borgonovo": {"campi": [["Comuni", "Valbrusa, Polignano di Sopra, Polignano di Sotto, Roccamurata, Lurenis, Sillano, Rocca Sole, Castellanica"], ["Fortificazioni", "Rocca Vetera"]], "link": [], "ordine": 9, "sottotitolo": "Provincia del sud", "testo": "Borgonovo è una delle cinque province del [[ausonia|Regno di Ausonia]] e prende il nome dalla sua città principale, sede del potere provinciale. Il suo territorio comprende otto comuni e una fortificazione.", "tipo": "luogo", "titolo": "Borgonovo"}, "meleagrus": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Meleagrus fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Meleagrus"}, "titius": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Titius fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Titius"}, "iasia": {"campi": [["Dono", "Le erbe, la cura e la scrittura"], ["Legami", "Collaborò con [[verbana|Verbana]]"], ["Fine", "Morta di un morbo contratto curando i malati"], ["Eredi spirituali", "I [[maestri-madre|Maestri della Madre]]"]], "link": [], "ordine": null, "sottotitolo": "La guaritrice e l'inventrice della scrittura", "testo": "Iasia insegnò agli uomini l'arte delle erbe, la cura e la scrittura. Le fonti la descrivono dolce ma inflessibile, animata da un severo senso del dovere.\n\nNella [[battaglia-isola|battaglia contro Egli]] curò i feriti. Tentò di curare anche la ferita della [[la-madre|Madre]], ma non vi riuscì, e la tradizione vuole che quel fallimento l'abbia segnata per sempre.\n\nNegli [[anni-crepuscolo|Anni del Crepuscolo]] inventò la scrittura per conservare i propri rimedi: le prime parole scritte della storia, osservano gli studiosi, non furono leggi ma ricette. Con [[verbana|Verbana]] redasse in seguito le prime leggi, e fissò per iscritto i nomi dei Beati che Verbana aveva conservato a memoria. Accolse inoltre i bambini rimasti orfani, e in ciò si riconosce l'origine dell'uso, proprio dell'[[ordine-madre|Ordine]], di crescere gli [[orfano-sacro|orfani]].\n\nMorì di un morbo contratto curando i malati.\n\nI luoghi in cui si curano gli infermi sono ancora chiamati «case di Iasia». Non ebbe figli; i soli a dirsi suoi eredi sono i [[maestri-madre|Maestri della Madre]], i cui archivi, a [[badia-antica|Badia Antica]], avrebbero inizio dal suo libro di rimedi.", "tipo": "beato", "titolo": "Iasia"}, "maestri-madre": {"campi": [["Compito", "Gestire gli archivi della Madre"], ["Accesso", "Su richiesta, dopo numerosi anni da [[presbiteri|Presbitero]]"], ["Numero e sede", "74, a [[badia-antica|Badia Antica]]"]], "link": ["ordine-madre"], "ordine": 4, "sottotitolo": "I Monaci Amanuensi", "testo": "I Maestri della Madre, detti anche Monaci Amanuensi, custodiscono gli archivi dell'Ordine. Sono settantaquattro e risiedono tutti a [[badia-antica|Badia Antica]].\n\nStudiano e leggono gli antichi manoscritti, ricercano cure e rimedi per le malattie, interpretano i presagi e attendono l'avvento del nuovo figlio della [[la-madre|Madre]]. Spetta a loro attribuire la nascita dei [[tre-figli|tre figli]], e dunque stabilire quando abbia inizio una nuova era del [[calendario-sacro|calendario sacro]].\n\nSi considerano eredi di [[iasia|Iasia]], e la tradizione vuole che i loro archivi abbiano inizio dal suo libro di rimedi.", "tipo": "ordine", "titolo": "I Maestri della Madre"}, "valeriano-fiordalisi": {"campi": [["Casata", "[[fiordalisi|Fiordalisi]]"], ["Sede", "[[villabranda|Villabranda]]"]], "link": [], "ordine": 1, "sottotitolo": "Sovrano del Regno di Ausonia", "testo": "Valeriano Fiordalisi è il sovrano che regge il [[ausonia|Regno di Ausonia]], unito sotto la sua corona. Risiede a [[villabranda|Villabranda]] ed è capo della casata [[fiordalisi|Fiordalisi]].", "tipo": "personaggio", "titolo": "Re Valeriano Fiordalisi"}, "sangue-beati": {"campi": [], "link": [], "ordine": 4, "sottotitolo": "La nobiltà come discendenza", "testo": "Nel regno la nobiltà si fonda sulla discendenza dai [[i-beati|Beati]], che negli [[anni-crepuscolo|Anni del Crepuscolo]] si unirono agli uomini.\n\nLe famiglie rivendicano di norma un antenato preciso: le casate di tradizione militare guardano a [[ceius|Ceius]], le grandi famiglie cittadine a [[tecton|Tecton]]. Non mancano rivendicazioni scomode: il sangue di [[theron|Theron]] scorrerebbe tra gli artigiani e quello di [[arator|Arator]] tra i contadini, a dimostrazione che non tutti i discendenti dei Beati siedono nei castelli.\n\nLa pretesa più audace resta quella della casata dei [[lealisti|Lealisti]], che si dice discendente diretta di [[vha-el|Vha-El]].", "tipo": "credenza", "titolo": "Il sangue dei Beati"}, "ausonia": {"campi": [["Sovrano", "Re [[valeriano-fiordalisi|Valeriano Fiordalisi]]"], ["Capitale", "[[villabranda|Villabranda]]"], ["Province", "[[villabranda|Villabranda]], [[torremalta|Torremalta]], [[belforte|Belforte]], [[borgonovo|Borgonovo]], [[pietracupa|Pietracupa]]"]], "link": [], "ordine": 5, "sottotitolo": "Il regno di Re Valeriano Fiordalisi", "testo": "Il Regno di Ausonia riunisce sotto un'unica corona cinque province, rette da Re [[valeriano-fiordalisi|Valeriano Fiordalisi]] dalla capitale [[villabranda|Villabranda]].\n\nIl regno è ordinato come un grande stato regionale. Ciascuna provincia prende il nome dalla propria città principale, che ne è anche la sede del potere.", "tipo": "luogo", "titolo": "Il Regno di Ausonia"}, "i-beati": {"campi": [], "link": ["sangue-beati"], "ordine": 4, "sottotitolo": "I figli angelici della Madre", "testo": "I Beati erano esseri angelici, figli della [[la-madre|Madre]], che dimoravano nel suo [[grembo|Grembo]].\n\nNel [[deicidio|Deicidio]] molti di loro furono divorati da [[egli|Egli]]. I superstiti seguirono la Madre sull'isola e combatterono al fianco di [[vha-el|Vha-El]]; circa quattrocento ne partirono al termine della battaglia.\n\nToccata la terra, i Beati perdettero l'immortalità. Negli [[anni-crepuscolo|Anni del Crepuscolo]] diedero agli uomini le prime arti, la lingua comune e i primi insediamenti, e si unirono a loro per amore. Da tali unioni la dottrina comune fa discendere la nobiltà.\n\nDei Beati se ne conoscono per nome soltanto pochi. Di alcuni la tradizione ricorda le opere: [[ceius|Ceius]], [[theron|Theron]], [[verbana|Verbana]], [[tecton|Tecton]], [[arator|Arator]] e [[iasia|Iasia]]. Di altri, [[amatus|Amatus]], [[titius|Titius]], [[vibius|Vibius]], [[etia|Etia]], [[ionide|Ionide]], [[meleagrus|Meleagrus]] e [[aurelianos|Aurelianos]], non resta che il nome, tramandato da Verbana.", "tipo": "essere", "titolo": "I Beati"}, "ionide": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Ionide fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Ionide"}, "tre-figli": {"campi": [["Primogenito", "Anno 0, fine della [[guerra-fratricida|Grande Guerra Fratricida]]"], ["Secondogenita", "Inizio dell'era presente"], ["Terzogenito", "L'era che verrà"]], "link": ["calendario-sacro"], "ordine": 5, "sottotitolo": "Primogenito, Secondogenita, Terzogenito", "testo": "Prima di svanire la [[la-madre|Madre]] divise il proprio spirito in tre parti sopite, destinate a nascere in ere diverse per governare il suo regno: il Primogenito, la Secondogenita e il Terzogenito.\n\nI figli non compaiono nel mondo in forma visibile. La loro nascita è attribuita dai Maestri dell'[[ordine-madre|Ordine]] a eventi di grande rilievo: nel caso del Primogenito e della Secondogenita, la conclusione di grandi conflitti.\n\nLa dottrina considera il Primogenito il vero primo figlio della Madre, in luogo di [[egli|Egli]]. Quando i tre spiriti saranno riuniti, la Madre rinascerà.", "tipo": "essere", "titolo": "I tre figli della Madre"}, "arator": {"campi": [["Dono", "L'agricoltura e il calendario delle stagioni"], ["Legami", "Primo Beato sposato a una donna degli uomini; rivale di [[tecton|Tecton]]"], ["Fine", "Morto di vecchiaia nei campi"], ["Discendenza rivendicata", "Le famiglie contadine più antiche"]], "link": [], "ordine": null, "sottotitolo": "Il seminatore", "testo": "Arator insegnò agli uomini l'agricoltura. Le fonti lo descrivono allegro e paziente, legato alla terra e al ritmo delle stagioni.\n\nSull'[[isola-madre|isola]], nei venti giorni che precedettero la battaglia, i [[i-beati|Beati]] conobbero per la prima volta la fame: fu Arator a trovare il cibo e a sfamarli.\n\nNegli [[anni-crepuscolo|Anni del Crepuscolo]] insegnò a seminare, a raccogliere e a conservare il grano, e compose il primo calendario delle stagioni. La tradizione lo ricorda come il primo Beato a unirsi per amore a una donna degli uomini: il loro sarebbe stato il primo matrimonio tra i due popoli.\n\nMorì vecchio, nei campi, all'ombra di una quercia. Proverbiale è la sua rivalità con [[tecton|Tecton]].\n\nL'uso di lasciare nel campo l'ultimo covone del raccolto, detto «covone di Arator», è diffuso in tutte le campagne. Le famiglie contadine più antiche ne vantano il sangue, e per questa stessa ragione la nobiltà lo considera un antenato di cui vergognarsi.", "tipo": "beato", "titolo": "Arator"}, "theron": {"campi": [["Dono", "La forgia e la metallurgia"], ["Opera", "Le armi e le armature della [[battaglia-isola|battaglia contro Egli]]"], ["Segni", "Le mani segnate dalle ustioni"], ["Discendenza rivendicata", "Artigiani e fabbri"]], "link": ["vha-el", "lancia-vha-el"], "ordine": null, "sottotitolo": "Il fabbro dei Beati", "testo": "Theron fu il maestro della forgia e della metallurgia tra i [[i-beati|Beati]]. Le fonti lo ricordano silenzioso e ostinato, più a suo agio davanti al fuoco che tra le persone.\n\nSull'[[isola-madre|Isola della Madre]], per venti giorni e venti notti, forgiò le armi e le armature con cui i Beati affrontarono [[egli|Egli]]. Fu quello il primo lavoro compiuto dai Beati da mortali: Theron vi si bruciò le mani e conobbe per primo il dolore, e le cicatrici gli rimasero per tutta la vita. La sola arma dell'isola che non uscì dalle sue mani fu la [[lancia-vha-el|Lancia di Vha-El]], per la quale egli nutrì sempre un profondo rispetto.\n\nNegli [[anni-crepuscolo|Anni del Crepuscolo]] si stabilì tra le montagne, aprì le prime miniere e insegnò agli uomini a fondere e temprare i metalli.\n\nAncora oggi i fabbri giurano «sul maglio di Theron», e l'uso vuole che una lama nuova si tempri in silenzio, in suo onore.\n\nLa tradizione afferma che egli non si unì ad alcuna famiglia di rango, ma a una donna del popolo. Il suo sangue scorrerebbe dunque tra artigiani e fabbri anziché tra i nobili: una tesi che la nobiltà, la quale fonda il proprio diritto sul [[sangue-beati|sangue dei Beati]], ha sempre accolto con fastidio.", "tipo": "beato", "titolo": "Theron"}, "guerra-fratricida": {"campi": [], "link": [], "ordine": 2.9, "sottotitolo": "La guerra che chiude gli Anni del Crepuscolo", "testo": "La Grande Guerra Fratricida pose fine agli [[anni-crepuscolo|Anni del Crepuscolo]]. Le fonti concordano nel ritenere che il mondo, privo di una guida divina, fosse caduto nel caos e nell'ambizione dei signori della guerra.\n\nFu un massacro, in cui furono prese moltissime vite. Dei suoi dettagli e delle sue cause gli storici sanno poco, e le cronache sopravvissute sono frammentarie.\n\nLa guerra ebbe termine con la [[comparsa-primogenito|Comparsa del Primogenito]].", "tipo": "evento", "titolo": "La Grande Guerra Fratricida"}, "auscultatori": {"campi": [["Compito", "Amministrare il culto della Madre nei grandi palazzi del regno e sorvegliare eventuali eresie"], ["Numero", "Uno per ogni provincia"], ["Potere", "Eleggono il [[privo|Privo]] tra loro"]], "link": ["ordine-madre"], "ordine": 2, "sottotitolo": "Uno per ogni provincia", "testo": "Gli Auscultatori amministrano il culto della Madre nei grandi palazzi del regno, uno per ciascuna provincia, e vigilano contro le eresie.\n\nPresso la nobiltà godono di una fama temuta. Sono ritenuti intoccabili, e si dice che riferiscano i segreti dei nobili, quasi in attesa di un loro passo falso per vederlo punito dal credo.\n\nAlla morte del [[privo|Privo]] tutti gli Auscultatori del regno vengono richiamati, ed è tra loro che si elegge il successore.", "tipo": "ordine", "titolo": "Gli Auscultatori"}, "vibius": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Vibius fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Vibius"}, "anni-primogenito": {"campi": [], "link": ["calendario-sacro"], "ordine": 3, "sottotitolo": "Dall'anno 0 alla nascita della Secondogenita", "testo": "Dagli Anni del Primogenito ha inizio il computo del tempo in uso nel regno. L'anno 0 coincide con l'anno in cui i Maestri dell'[[ordine-madre|Ordine Monastico della Madre]] attribuirono la [[comparsa-primogenito|Comparsa del Primogenito]], che pose fine alla Grande Guerra Fratricida.\n\nLa durata dell'era non fu stabilita in anticipo, né poteva esserlo: secondo la dottrina, essa si conclude soltanto quando i Maestri riconoscono la nascita del frammento successivo dello spirito della Madre, la Secondogenita.", "tipo": "era", "titolo": "Gli Anni del Primogenito"}, "anni-terzogenito": {"campi": [], "link": [], "ordine": 5, "sottotitolo": "L'era che verrà", "testo": "Gli Anni del Terzogenito appartengono ancora all'attesa. La dottrina insegna che il terzo e ultimo frammento dello spirito della [[la-madre|Madre]] nascerà nel tempo stabilito, e che con la sua nascita si compirà il ciclo dei [[tre-figli|tre figli]].\n\nQuale evento ne segnerà l'inizio, i Maestri non lo dicono, o non lo sanno.", "tipo": "era", "titolo": "Gli Anni del Terzogenito"}, "comparsa-primogenito": {"campi": [], "link": [], "ordine": 3, "sottotitolo": "L'anno 0", "testo": "La Comparsa del Primogenito segna la fine della [[guerra-fratricida|Grande Guerra Fratricida]] e l'anno 0 del [[calendario-sacro|calendario sacro]].\n\nI Beati che avevano tramandato la storia della [[la-madre|Madre]] attribuirono la fine del conflitto e l'avvento della pace alla comparsa del Primogenito, il primo figlio nato dallo spirito frammentato della Madre. L'evento fu accolto come un miracolo di unificazione.\n\nOccorre precisare che il Primogenito non comparve fisicamente nel mondo: la sua nascita fu riconosciuta e proclamata dai Maestri dell'[[ordine-madre|Ordine]], e così è avvenuto per ogni figlio successivo.\n\nDa allora il Primogenito è considerato il vero primo figlio della Madre, e non [[egli|Egli]], nato dalla sua unione con [[vha-el|Vha-El]].", "tipo": "evento", "titolo": "La Comparsa del Primogenito"}, "villabranda": {"campi": [["Governo", "La corona, casata [[fiordalisi|Fiordalisi]]"], ["Comuni", "Argiano, Ripafratta, Valdoria, Valbranda, Montefosco, Valverde, Montemarco, Castelfidro, Borromia, Ameria"], ["Fortificazioni", "Rocca Sillara, Castel Solatio, Ponte del Brando"]], "link": [], "ordine": 6, "sottotitolo": "Capitale del regno", "testo": "Villabranda è una delle cinque province del [[ausonia|Regno di Ausonia]] e prende il nome dalla sua città principale, sede del potere provinciale. Il suo territorio comprende dieci comuni e tre fortificazioni. È la capitale del regno e la sede del re e della casata [[fiordalisi|Fiordalisi]].", "tipo": "luogo", "titolo": "Villabranda"}, "torremalta": {"campi": [["Comuni", "Valmornasco, Bellinzate, Corniolo, Chiavarone, Clavière"], ["Fortificazioni", "Castel Scurano"]], "link": [], "ordine": 7, "sottotitolo": "Provincia del nord", "testo": "Torremalta è una delle cinque province del [[ausonia|Regno di Ausonia]] e prende il nome dalla sua città principale, sede del potere provinciale. Il suo territorio comprende cinque comuni e una fortificazione.", "tipo": "luogo", "titolo": "Torremalta"}, "grembo": {"campi": [], "link": ["aldila"], "ordine": 1, "sottotitolo": "Il paradiso dei Beati", "testo": "Il Grembo della [[la-madre|Madre]] era, secondo le fonti, un piano dimensionale di grande bellezza, un autentico paradiso, dove dimoravano i [[i-beati|Beati]].\n\n[[egli|Egli]] lo squarciò nel [[deicidio|Deicidio]]. La dottrina insegna che, quando la Madre rinascerà per l'unione dei tre spiriti, il Grembo guarirà e sarà nuovo, e diverrà la dimora delle anime giuste.\n\nI Maestri considerano il Grembo, il [[paradiso-condiviso|paradiso in costruzione]] e le [[sale-atemporali|Sale Atemporali]] come tre stati di un medesimo luogo.", "tipo": "luogo", "titolo": "Il Grembo"}, "vha-el": {"campi": [], "link": [], "ordine": 3, "sottotitolo": "Il più forte e astuto dei Beati", "testo": "Vha-El fu, secondo le fonti, il più forte e astuto dei [[i-beati|Beati]]. Con lui la [[la-madre|Madre]] si unì per generare [[egli|Egli]].\n\nFu presente al [[deicidio|Deicidio]], ma non riuscì a impedirlo. Sull'isola radunò i Beati superstiti, che armò grazie all'arte di [[theron|Theron]], e guidò la [[battaglia-isola|battaglia contro Egli]], giungendo ad affrontarlo uno contro uno. Di sua mano creò la [[lancia-vha-el|Lancia]] che ne porta il nome. Il suo compagno più stretto fu [[ceius|Ceius]].\n\nLa sua sorte è ignota: le fonti non dicono se sia caduto nello scontro.\n\nNessuna figura divide il regno quanto la sua. L'[[ordine-madre|Ordine della Madre]] ne nega l'esistenza; il [[culto-padre|Culto del Padre]] lo venera come vero eroe e salvatore del mondo; i [[lealisti|Lealisti]] sostengono che sia sopravvissuto e abbia generato una stirpe giunta fino ai nostri giorni.", "tipo": "essere", "titolo": "Vha-El"}, "pietracupa": {"campi": [["Comuni", "Sommana, Nucerina, Calvanito"], ["Fortificazioni", "Castel Mortella"]], "link": [], "ordine": 10, "sottotitolo": "Provincia del sud", "testo": "Pietracupa è una delle cinque province del [[ausonia|Regno di Ausonia]] e prende il nome dalla sua città principale, sede del potere provinciale. Il suo territorio comprende tre comuni e una fortificazione.", "tipo": "luogo", "titolo": "Pietracupa"}, "aurelianos": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Aurelianos fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Aurelianos"}, "etia": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Etia fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Etia"}, "monaci-guerrieri": {"campi": [["Compito", "Difendere [[badia-antica|Badia Antica]] e il territorio dello stato monastico"], ["Accesso", "Scelta del seminarista al compimento dei 16 anni"], ["Numero", "Un esercito di 8000 uomini"]], "link": ["ordine-madre"], "ordine": 6, "sottotitolo": "L'Esercito Santo", "testo": "I Monaci Guerrieri formano l'Esercito Santo dell'Ordine, forte di ottomila uomini. Vi si accede al compimento dei sedici anni, per scelta del seminarista.\n\nLoro compito è difendere [[badia-antica|Badia Antica]] e il territorio dello stato monastico e, in caso di necessità, scendere in guerra.", "tipo": "ordine", "titolo": "I Monaci Guerrieri"}, "vicari-cappella": {"campi": [["Compito", "Aiutare il [[presbiteri|Presbitero]] nei compiti amministrativi, logistici e teologici"], ["Accesso", "Scelta del seminarista al compimento dei 16 anni"], ["Numero", "Sconosciuto, almeno uno per Presbitero"]], "link": ["ordine-madre"], "ordine": 5, "sottotitolo": "Il primo grado dell'Ordine", "testo": "I Vicari di Cappella costituiscono il primo grado dell'Ordine: chiunque vi entri diventa Vicario. Al compimento dei sedici anni il seminarista sceglie tra questa via e quella dei [[monaci-guerrieri|Monaci Guerrieri]].\n\nIl loro compito è assistere il [[presbiteri|Presbitero]] in ogni incombenza amministrativa, logistica e teologica. Restano Vicari, di norma, i giovani e gli anziani che non hanno voluto percorrere la carriera dell'Ordine.\n\nLa maggior parte dei Vicari più giovani è costituita da bambini [[orfano-sacro|orfani]] o abbandonati.", "tipo": "ordine", "titolo": "I Vicari di Cappella"}, "lealisti": {"campi": [], "link": [], "ordine": 3, "sottotitolo": "Chi crede nella Madre e in Vha-El", "testo": "Con il nome di Lealisti si indicano quanti credono tanto nella [[la-madre|Madre]] quanto in [[vha-el|Vha-El]].\n\nLa corrente fa capo a una casata che si attribuisce la discendenza diretta da Vha-El: secondo la sua tradizione, egli sopravvisse alla battaglia e la sua stirpe giunge ininterrotta fino ai giorni nostri. Poiché nel regno la nobiltà si fonda sul [[sangue-beati|sangue dei Beati]], una simile pretesa ha un evidente peso politico.\n\nL'influenza dei Lealisti resta tuttavia minima, limitata a quella famiglia e a pochi fedeli. Tanto l'[[ordine-madre|Ordine della Madre]] quanto il [[culto-padre|Culto del Padre]] ne respingono la dottrina.", "tipo": "fede", "titolo": "I Lealisti"}, "privo": {"campi": [["Compito", "Collegamento diretto tra il Primogenito e la Secondogenita e gli uomini"], ["Elezione", "Alla morte di un Privo tutti gli [[auscultatori|Auscultatori]] del regno vengono richiamati ed eleggono tra loro il nuovo Privo"], ["Sede", "[[badia-antica|Badia Antica]]"], ["Numero", "Uno"]], "link": ["ordine-madre"], "ordine": 1, "sottotitolo": "Il capo dell'Ordine", "testo": "Il Privo è la guida suprema dell'[[ordine-madre|Ordine Monastico della Madre]] ed è ritenuto in diretto collegamento con la [[la-madre|Madre]].\n\nAl momento della proclamazione gli vengono svuotati i bulbi oculari e cucita la bocca. Secondo la dottrina, la cecità gli risparmia la vista delle atrocità del mondo, mentre il mutismo gli impedisce di usare il proprio potere per fini estranei al culto. Alcuni studiosi hanno voluto riconoscere un antecedente di quest'uso nel silenzio degli ultimi anni di [[verbana|Verbana]].", "tipo": "ordine", "titolo": "Il Privo"}, "egli": {"campi": [], "link": ["esilio-egli", "aldila"], "ordine": 2, "sottotitolo": "Il figlio senza nome", "testo": "Con il nome di Egli si indica il figlio nato dall'unione della [[la-madre|Madre]] e di [[vha-el|Vha-El]]. Le fonti lo descrivono di natura diversa dai [[i-beati|Beati]]: non un Beato, ma un dio.\n\nScoperto il proposito della Madre di generare altri figli, egli temette che il proprio potere venisse diviso e volle farsi unico Assoluto. Fu autore del [[deicidio|Deicidio]], si nutrì dei Beati e inseguì la Madre fin sull'isola, dove fu affrontato da Vha-El e dai Beati e infine esiliato nelle profondità della realtà.\n\nDopo l'esilio il suo nome cessò di essere pronunciato, e la consuetudine di chiamarlo soltanto Egli è osservata ovunque.\n\nSecondo l'insegnamento dei Maestri, le anime dei malvagi finiscono nell'oblio, presso di lui.", "tipo": "essere", "titolo": "Egli"}, "paradiso-condiviso": {"campi": [], "link": [], "ordine": 1.1, "sottotitolo": "L'opera interrotta della Madre", "testo": "Le fonti più antiche riferiscono che la [[la-madre|Madre]] desiderava creare un mondo destinato ai [[i-beati|Beati]], ma che da sola non poteva compiere l'opera. Per questo si unì a [[vha-el|Vha-El]], il più forte e astuto tra i Beati, e da questa unione nacque un figlio di natura diversa da quella dei Beati: un dio, colui che oggi è chiamato [[egli|Egli]].\n\nInsieme essi intrapresero la costruzione di un paradiso destinato a entrambi i popoli. Secondo la tradizione, i Beati ne sarebbero stati i sovrani, mentre gli uomini giusti, dopo la morte, vi avrebbero dimorato al loro fianco.\n\nL'opera fu interrotta dal [[deicidio|Deicidio]] e non venne mai compiuta. Ciò che ne rimane, secondo l'insegnamento dei Maestri, sono le [[sale-atemporali|Sale Atemporali]].\n\nVa osservato che l'[[ordine-madre|Ordine]], negando l'esistenza di Vha-El, attribuisce l'intera opera alla sola Madre.", "tipo": "evento", "titolo": "La creazione del paradiso"}, "amatus": {"campi": [], "link": [], "ordine": null, "sottotitolo": "Combatté con Vha-El contro Egli", "testo": "Amatus fu tra i [[i-beati|Beati]] che combatterono al fianco di [[vha-el|Vha-El]] nella [[battaglia-isola|battaglia contro Egli]]. Delle sue imprese non si conserva memoria: il nome è giunto fino a noi soltanto grazie a [[verbana|Verbana]], che lo tenne a memoria con quelli dei compagni.", "tipo": "beato", "titolo": "Amatus"}, "aldila": {"campi": [], "link": [], "ordine": 1, "sottotitolo": "Il Grembo, l'oblio e le Sale Atemporali", "testo": "Le dottrine sull'aldilà si fondano su antiche testimonianze dei primi [[i-beati|Beati]] giunti sulla terra, che parlano di un paradiso: un luogo in cui tutto è possibile e regnano la pace e l'arte. Da queste testimonianze i Maestri traggono l'insegnamento che il [[grembo|Grembo]] sia la dimora destinata alle anime meritevoli dopo la morte.\n\nLe anime dei malvagi, secondo la stessa dottrina, sono destinate all'oblio, presso [[egli|Egli]]. Quando lo spirito della [[la-madre|Madre]] sarà ricomposto, le due schiere si affronteranno in battaglia.\n\nFinché la Madre non sarà rinata, si ritiene che le anime dei giusti vaghino nelle [[sale-atemporali|Sale Atemporali]], in attesa del suo ritorno.", "tipo": "credenza", "titolo": "L'aldilà"}, "corno-ceius": {"campi": [], "link": [], "ordine": 2, "sottotitolo": "Reliquia della battaglia contro Egli", "testo": "Il Corno di Ceius appartenne a [[ceius|Ceius]], il primo dei [[i-beati|Beati]] a seguire [[vha-el|Vha-El]]. Sull'isola il suo suono riscosse i Beati dalla disperazione.\n\nIl corno, o ciò che la tradizione indica come tale, si suona ancora alle incoronazioni e alle dichiarazioni di guerra.", "tipo": "reliquia", "titolo": "Il Corno di Ceius"}, "calendario-sacro": {"campi": [], "link": ["maestri-madre", "tre-figli"], "ordine": 2, "sottotitolo": "Come si contano gli anni", "testo": "Il computo del tempo in uso nel regno procede per ere, ciascuna legata a uno dei figli della [[la-madre|Madre]]: gli [[anni-primogenito|Anni del Primogenito]], gli [[anni-secondogenita|Anni della Secondogenita]] e, in futuro, gli [[anni-terzogenito|Anni del Terzogenito]].\n\nL'anno 0 corrisponde all'anno in cui i Maestri dell'[[ordine-madre|Ordine]] attribuirono la Comparsa del Primogenito. Nessuna era ha una durata stabilita: ciascuna si chiude quando i Maestri riconoscono la nascita del figlio successivo. Ne consegue che il calendario stesso dipende dal giudizio dell'Ordine.", "tipo": "credenza", "titolo": "Il calendario sacro"}};
+const S={pub:new Map(Object.entries(DATA)),riv:new Map(),owner:false,db:null,comments:null,ready:false,error:null};
+const $=s=>document.querySelector(s);
+const el=(tag,attrs,...kids)=>{const e=document.createElement(tag);if(attrs)for(const[k,v]of Object.entries(attrs)){if(v==null||v===false)continue;if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?'':v)}for(const c of kids.flat()){if(c==null||c===false)continue;e.append(c.nodeType?c:document.createTextNode(String(c)))}return e};
+
+function entry(id){
+  const p=S.pub.get(id), r=S.owner?S.riv.get(id):null;
+  if(!p&&!(r&&r.privata))return null;
+  const base=(r&&r.privata)?r:p;
+  return Object.assign({id},base,{privata:!p&&!!(r&&r.privata),note:r?r.note||'':'',daDefinire:r&&Array.isArray(r.daDefinire)?r.daDefinire:[]});
+}
+function allIds(){const s=new Set(S.pub.keys());if(S.owner)for(const[k,v]of S.riv)if(v.privata)s.add(k);return[...s]}
+function all(){return allIds().map(entry).filter(Boolean)}
+function byTipo(k){return all().filter(e=>e.tipo===k).sort((a,b)=>(a.ordine??999)-(b.ordine??999)||String(a.titolo).localeCompare(String(b.titolo),'it'))}
+function title(id){const e=entry(id);return e?e.titolo:null}
+
+/* testo con collegamenti [[id]] o [[id|parole]] */
+function richText(str){
+  const frag=document.createDocumentFragment();
+  const re=/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;let last=0,m;
+  while((m=re.exec(str))){
+    if(m.index>last)frag.append(str.slice(last,m.index));
+    const id=m[1].trim(),t=title(id);
+    const a=el('a',{href:'#'+id,class:t?null:'missing',title:t?null:'Voce non ancora scritta'},m[2]||t||id);
+    frag.append(a);last=re.lastIndex;
+  }
+  if(last<str.length)frag.append(str.slice(last));
+  return frag;
+}
+function refsIn(e){const out=new Set(e.link||[]);const re=/\[\[([^\]|]+)/g;let m;const txt=(e.testo||'')+' '+(e.campi||[]).map(c=>c[1]).join(' ');while((m=re.exec(txt)))out.add(m[1].trim());out.delete(e.id);return out}
+
+function go(hash){if(location.hash===hash||(hash==='#'&&!location.hash))render();else location.hash=hash}
+
+function renderNav(current){
+  const nav=$('#nav');nav.replaceChildren();
+  nav.append(el('button',{type:'button','aria-current':current==='home'?'true':null,onclick:()=>go('#')},'Cronologia'));
+  for(const t of TIPI){const n=byTipo(t.k).length;if(!n&&!S.owner)continue;
+    nav.append(el('button',{type:'button','aria-current':current===t.k?'true':null,onclick:()=>go('#sez-'+t.k)},t.label,el('em',null,String(n))));}
+  
+}
+
+function chip(e){return el('button',{type:'button',class:'chip'+(e.privata?' priv':''),onclick:()=>go('#'+e.id)},e.titolo)}
+
+function viewHome(){
+  renderNav('home');
+  const ere=byTipo('era'),ev=byTipo('evento');
+  const v=el('div',{class:'view'});
+  v.append(el('p',{class:'eyebrow'},'Archivio del mondo'),el('h1',null,'Codex di Ausonia'),
+    el('p',{class:'lede'},'Le ere, i luoghi, le fedi e le casate del mondo della Madre, raccolti in un solo libro. Ogni voce rimanda alle altre.'),el('div',{class:'fregio','aria-hidden':'true',style:'margin-top:22px'}));
+  {const fr=affresco('battaglia-isola');if(fr){fr.style.marginTop='26px';v.append(fr)}}
+  if(!all().length){v.append(el('div',{class:'section'},el('div',{class:'empty'},S.error||'Il codex è ancora vuoto. Qui compariranno le ere del mondo in ordine di tempo, con i loro eventi.')));$('#main').replaceChildren(v);return}
+  const sec=el('section',{class:'section','aria-labelledby':'h-cro'},el('h2',{id:'h-cro'},'Cronologia'));
+  const ol=el('ol',{class:'timeline'});
+  ere.forEach((e,i)=>{
+    const evs=ev.filter(x=>Math.floor(x.ordine??0)===Math.floor(e.ordine??-1));
+    ol.append(el('li',{class:'era'},
+      el('div',{class:'era-n'},el('b',null,ROMAN[i+1]||String(i+1)),'Era'),
+      el('div',null,el('h3',null,el('button',{type:'button',onclick:()=>go('#'+e.id)},e.titolo)),
+        e.sottotitolo?el('p',null,e.sottotitolo):null,
+        evs.length?el('ul',{class:'events'},evs.map(x=>el('li',null,chip(x)))):null)));
+  });
+  sec.append(ol);v.append(sec);
+  const cats=el('section',{class:'section','aria-labelledby':'h-sez'},el('h2',{id:'h-sez'},'Sezioni'));
+  const g=el('div',{class:'grid'});
+  for(const t of TIPI){const n=byTipo(t.k).length;if(!n||t.k==='era')continue;
+    g.append(el('button',{type:'button',class:'cat',onclick:()=>go('#sez-'+t.k)},el('b',null,t.label),el('span',null,t.desc+' · '+n)));}
+  cats.append(g);v.append(cats);
+  $('#main').replaceChildren(v);
+}
+
+function listView(items,head,sub,current){
+  renderNav(current);
+  const v=el('div',{class:'view'},el('p',{class:'eyebrow'},'Sezione'),el('h1',null,head),sub?el('p',{class:'lede'},sub):null);
+  const sec=el('div',{class:'section'});
+  if(!items.length)sec.append(el('div',{class:'empty'},'Nessuna voce qui.'));
+  else sec.append(el('ul',{class:'list'},items.map(e=>el('li',null,el('button',{type:'button',onclick:()=>go('#'+e.id)},el('b',null,e.titolo),e.sottotitolo?el('span',null,e.sottotitolo):null,e.privata?el('span',{class:'badge'},'Solo tu'):null)))));
+  v.append(sec);$('#main').replaceChildren(v);
+}
+
+function viewSearch(q){
+  const n=q.toLowerCase();
+  const items=all().filter(e=>[e.titolo,e.sottotitolo,e.testo,(e.campi||[]).flat().join(' ')].join(' ').toLowerCase().includes(n));
+  listView(items,'Ricerca','Voci che contengono “'+q+'”: '+items.length,null);
+}
+
+function viewEntry(id){
+  const e=entry(id);
+  if(!e){renderNav(null);$('#main').replaceChildren(el('div',{class:'view'},el('div',{class:'empty'},S.ready?'Questa voce non esiste o non è visibile.':'Apertura del codex…')));return}
+  renderNav(e.tipo);
+  const t=TIPO[e.tipo]||{label:'Voci',sing:'Voce'};
+  const art=el('article',{class:'view','data-comment-target':''});
+  art.append(el('div',{class:'crumbs'},el('button',{type:'button',onclick:()=>go('#sez-'+e.tipo)},t.sing),e.privata?el('span',{class:'badge'},'Solo tu'):null));
+  art.append(el('header',null,el('h1',null,e.titolo),e.sottotitolo?el('p',{class:'sub'},e.sottotitolo):null));
+  const fr=affresco(e.id);if(fr)art.append(fr);
+  if(e.campi&&e.campi.length){const dl=el('dl',{class:'fields'});for(const[k,val]of e.campi){dl.append(el('dt',null,k),el('dd',null,richText(String(val))))}art.append(dl)}
+  if(e.testo){const tx=el('div',{class:'text'});String(e.testo).split(/\n\s*\n/).forEach(p=>{if(p.trim())tx.append(el('p',null,richText(p.trim())))});art.append(tx)}
+  const out=[...refsIn(e)].map(entry).filter(Boolean);
+  const back=all().filter(x=>x.id!==e.id&&refsIn(x).has(e.id)&&!out.some(o=>o.id===x.id));
+  if(out.length)art.append(el('div',{class:'related'},el('h4',null,'Collegamenti'),el('div',null,out.map(chip))));
+  if(back.length)art.append(el('div',{class:'related'},el('h4',null,'Citata in'),el('div',null,back.map(chip))));
+  if(S.owner&&(e.note||e.daDefinire.length)){
+    art.append(el('section',{class:'secret','aria-label':'Parte riservata','data-uncommentable':''},el('p',{class:'eyebrow'},'Riservato · lo vedi solo tu'),
+      e.note?el('p',null,e.note):null,
+      e.daDefinire.length?el('div',null,el('h4',{class:'eyebrow',style:'margin:0 0 4px'},'Da definire'),el('ul',null,e.daDefinire.map(d=>el('li',null,d)))):null));
+  }
+  const actions=el('div',{class:'actions','data-uncommentable':''});
+  if(S.comments&&!e.privata){
+    const b=el('button',{type:'button',class:'btn'},'Commenta questa voce');
+    b.addEventListener('click',async()=>{try{await S.comments.openComposer({element:art})}catch(err){b.hidden=true}});
+    actions.append(b);
+  }
+  if(S.owner)actions.append(el('button',{type:'button',class:'btn',onclick:()=>viewEditor(e.id)},'Modifica'));
+  if(actions.childNodes.length)art.append(actions);
+  $('#main').replaceChildren(art);
+}
+
+/* ---------- affreschi: scene dipinte in SVG, con intonaco, crepe e cadute di colore ---------- */
+const P={gold:'#D2A63C',goldD:'#8E6A22',sky:'#34508C',skyL:'#5370A8',night:'#1D2647',dusk:'#A9644A',ochre:'#C29A5E',earth:'#9B7448',green:'#6F7F52',greenL:'#8C9A68',
+  rock:'#BDA986',rockL:'#DCCCA8',rockD:'#8C7A5C',sea:'#2D5672',seaL:'#86A8B8',skin:'#E2B48E',skinD:'#9C6B52',red:'#A8382A',redD:'#5E1C16',blue:'#2E4D93',
+  white:'#EEE5D1',rose:'#D49A8A',violet:'#5E4466',brown:'#6B4A2E',brownL:'#8D6A47',steel:'#8B8F92',black:'#231A16',flame:'#DD7A35',flameL:'#F2C35A',plaster:'#EDE3CC',smoke:'#6E6560'};
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const arm=(x1,y1,x2,y2,c)=>`<path d="M${x1},${y1} L${x2},${y2}" stroke="${c}" stroke-width="7.5" stroke-linecap="round"/><circle cx="${x2}" cy="${y2}" r="3.6" fill="${P.skin}"/>`;
+function fig(o){
+  const s=o.s||1,f=o.flip?-1:1,k=o.pose==='kneel'||o.kneel;
+  const ac=o.mantle||o.robe;let g='';
+  if(o.wings){const w=o.wings===true?P.white:o.wings;
+    const one=`<path d="M-6,-86 C-58,-120 -80,-46 -34,-16 C-44,-52 -32,-72 -6,-72Z" fill="${P.gold}"/><path d="M-6,-84 C-48,-110 -64,-52 -31,-26 C-38,-56 -28,-72 -6,-74Z" fill="${w}"/><path d="M-8,-82 C-34,-96 -44,-68 -28,-42" stroke="${P.red}" stroke-width="2" fill="none" opacity=".55"/><path d="M-8,-78 C-26,-86 -36,-66 -26,-50" stroke="${P.goldD}" stroke-width="1.4" fill="none" opacity=".6"/>`;
+    g+=one+`<g transform="scale(-1,1)">${one}</g>`;}
+  if(o.halo==='dark')g+=`<circle cx="0" cy="-104" r="20" fill="${P.black}" stroke="${P.redD}" stroke-width="2.5"/>`;
+  else if(o.halo)g+=`<circle cx="0" cy="-104" r="19" fill="${P.gold}" stroke="${P.goldD}" stroke-width="1.6"/><circle cx="0" cy="-104" r="15.5" fill="none" stroke="${P.goldD}" stroke-width=".8" stroke-dasharray="1.5 2.5" opacity=".7"/>`;
+  if(o.halo==='rays')g+=Array.from({length:16},(_,i)=>{const a=i/16*Math.PI*2;return`<path d="M${Math.cos(a)*21},${-104+Math.sin(a)*21} L${Math.cos(a)*32},${-104+Math.sin(a)*32}" stroke="${P.gold}" stroke-width="2"/>`}).join('');
+  g+=k?`<path d="M-11,-90 C-22,-62 -30,-30 -32,0 L32,0 C33,-14 20,-22 12,-30 C14,-60 12,-80 11,-90Z" fill="${o.robe}"/>`
+      :`<path d="M-11,-90 C-24,-60 -28,-25 -27,0 L27,0 C28,-25 24,-60 11,-90Z" fill="${o.robe}"/>`;
+  g+=`<path d="M-5,-70 C-9,-40 -12,-20 -14,0 M4,-72 C6,-44 9,-20 11,0 M-1,-60 C-1,-38 -2,-18 -2,0" stroke="#000" stroke-opacity=".17" stroke-width="1.6" fill="none"/>`;
+  if(o.mantle)g+=k?`<path d="M-12,-90 C4,-76 20,-48 26,-6 L12,-2 C8,-38 -2,-70 -12,-90Z" fill="${o.mantle}"/>`
+                  :`<path d="M-12,-90 C6,-78 22,-50 24,-6 L10,-2 C8,-40 -2,-70 -12,-90Z" fill="${o.mantle}"/><path d="M-12,-90 C-16,-70 -20,-50 -22,-30" stroke="${o.mantle}" stroke-width="5" fill="none"/>`;
+  if(o.wound)g+=`<path d="M-6,-58 C-2,-52 3,-52 7,-46" stroke="${P.red}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  const p=o.pose||'stand';
+  if(p==='stand'||p==='spear'&&false)g+=arm(-10,-85,-2,-66,ac)+arm(10,-85,2,-66,ac);
+  if(p==='pray'||p==='kneel')g+=arm(-10,-85,-2,-80,ac)+arm(10,-85,2,-80,ac);
+  if(p==='orant')g+=arm(-10,-86,-32,-112,ac)+arm(10,-86,32,-112,ac);
+  if(p==='point')g+=arm(-10,-85,-2,-66,ac)+arm(10,-86,40,-104,ac);
+  if(p==='grief')g+=arm(-10,-86,-9,-110,ac)+arm(10,-86,9,-110,ac);
+  if(p==='raise')g+=arm(-10,-85,-26,-70,ac)+arm(10,-86,26,-134,ac);
+  if(p==='horn')g+=arm(-10,-85,-2,-66,ac)+arm(10,-86,12,-100,ac);
+  if(p==='spear'){g+=`<path d="M18,8 L18,-160" stroke="${P.brownL}" stroke-width="3"/><path d="M18,-174 L23,-158 L13,-158Z" fill="${P.steel}"/>`+arm(-10,-85,-2,-66,ac)+arm(10,-85,18,-74,ac);}
+  if(p==='lance'){g+=`<path d="M-40,-28 L96,-124" stroke="${P.brownL}" stroke-width="3.4"/><path d="M106,-131 L90,-128 L96,-118Z" fill="${P.gold}" stroke="${P.goldD}" stroke-width="1"/>`+arm(-10,-85,6,-70,ac)+arm(10,-86,40,-92,ac);}
+  if(p==='thrust'){g+=`<path d="M-30,-60 L110,-104" stroke="${P.brownL}" stroke-width="3"/><path d="M118,-106 L104,-110 L106,-99Z" fill="${P.steel}"/>`+arm(-10,-85,10,-74,ac)+arm(10,-86,40,-86,ac);}
+  if(p==='lie')g+=arm(-8,-85,6,-60,ac);
+  g+=`<ellipse cx="0" cy="-103" rx="9" ry="10.5" fill="${o.skin||P.skin}"/>`;
+  if(o.hair==='long')g+=`<path d="M-10,-104 C-12,-120 12,-120 10,-104 C12,-96 12,-88 10,-82 L7,-82 C8,-92 7,-104 4,-110 C-2,-112 -6,-110 -7,-104 C-8,-96 -8,-90 -7,-82 L-10,-82 C-12,-90 -12,-98 -10,-104Z" fill="${o.hairC||P.brown}"/>`;
+  else if(o.hair==='tonsure')g+=`<path d="M-9.5,-104 C-10,-110 -7,-113 -4,-113 L-5,-108 C-6,-106 -7,-104 -9.5,-104Z M9.5,-104 C10,-110 7,-113 4,-113 L5,-108 C6,-106 7,-104 9.5,-104Z" fill="${P.brown}"/>`;
+  else if(o.hair!==false)g+=`<path d="M-9.5,-103 C-11,-119 11,-119 9.5,-103 C7,-111 -7,-111 -9.5,-103Z" fill="${o.hairC||P.brown}"/>`;
+  g+=`<path d="M-4.6,-104 h3 M1.6,-104 h3" stroke="${P.black}" stroke-width="1.1" stroke-linecap="round"/><path d="M0,-102 L-.8,-98.5 L.8,-98.5" stroke="${P.skinD}" stroke-width=".8" fill="none"/>`;
+  if(o.helmet)g+=`<path d="M-10.5,-104 C-11,-121 11,-121 10.5,-104 L12.5,-102 L-12.5,-102Z" fill="${P.steel}"/><path d="M0,-118 L0,-104" stroke="#5d6063" stroke-width="1.4"/>`;
+  if(o.crown)g+=`<path d="M-10,-112 L-10,-120 L-5,-115 L0,-123 L5,-115 L10,-120 L10,-112Z" fill="${P.gold}" stroke="${P.goldD}" stroke-width=".8"/>`;
+  if(p==='horn')g+=`<path d="M8,-100 Q32,-112 46,-90" stroke="${P.gold}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M42,-98 L54,-84 L38,-84Z" fill="${P.gold}" stroke="${P.goldD}" stroke-width=".8"/>`;
+  if(o.shield)g+=`<circle cx="-16" cy="-58" r="15" fill="${o.shield}" stroke="${P.black}" stroke-opacity=".5" stroke-width="1.5"/><circle cx="-16" cy="-58" r="4" fill="${P.gold}"/>`;
+  const rot=o.rot?` rotate(${o.rot})`:'';
+  return `<g transform="translate(${o.x},${o.y+(k?22*s:0)}) scale(${f*s},${s})${rot}">${g}</g>`;
+}
+const rect=(x,y,w,h,c,op)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"${op?` opacity="${op}"`:''}/>`;
+function rock(x,y,w,h){return `<path d="M${x},${y} L${x+w*.12},${y-h*.8} L${x+w*.3},${y-h} L${x+w*.5},${y-h*.92} L${x+w*.62},${y-h*.62} L${x+w*.82},${y-h*.7} L${x+w},${y}Z" fill="${P.rock}"/>`+
+  `<path d="M${x+w*.12},${y-h*.8} L${x+w*.3},${y-h} L${x+w*.5},${y-h*.92} L${x+w*.46},${y-h*.76} L${x+w*.2},${y-h*.7}Z" fill="${P.rockL}"/>`+
+  `<path d="M${x+w*.62},${y-h*.62} L${x+w*.82},${y-h*.7} L${x+w*.78},${y-h*.55} L${x+w*.64},${y-h*.5}Z" fill="${P.rockL}"/>`+
+  `<path d="M${x+w*.2},${y-h*.7} L${x+w*.24},${y} M${x+w*.46},${y-h*.76} L${x+w*.5},${y} M${x+w*.64},${y-h*.5} L${x+w*.7},${y}" stroke="${P.rockD}" stroke-width="1.6" opacity=".7"/>`}
+function waves(y0,y1,r){let s='';for(let y=y0;y<y1;y+=16)for(let x=10+(y%32?14:0);x<800;x+=36){s+=`<path d="M${x},${y} q9,-7 18,0" stroke="${P.seaL}" stroke-width="1.6" fill="none" opacity="${.35+r()*.4}"/>`}return s}
+function stars(n,r,ymax){let s='';for(let i=0;i<n;i++){const x=20+r()*760,y=20+r()*ymax,z=1.5+r()*2.5;s+=`<path d="M${x},${y-z*2} L${x+z*.6},${y} L${x},${y+z*2} L${x-z*.6},${y}Z M${x-z*2},${y} L${x},${y+z*.6} L${x+z*2},${y} L${x},${y-z*.6}Z" fill="${P.gold}" opacity=".85"/>`}return s}
+function rays(cx,cy,n,r0,r1,c,w){return Array.from({length:n},(_,i)=>{const a=i/n*Math.PI*2;return`<path d="M${cx+Math.cos(a)*r0},${cy+Math.sin(a)*r0} L${cx+Math.cos(a)*r1},${cy+Math.sin(a)*r1}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`}).join('')}
+function arcade(x,y,n,cw,h,opts={}){let s='';const c=opts.c||P.white,c2=opts.c2||P.rose;
+  s+=rect(x,y-6,n*cw+10,6,P.rockD);
+  for(let i=0;i<=n;i++){if(opts.missing&&opts.missing.includes(i))continue;s+=rect(x+i*cw,y-h,10,h-6,c)+rect(x+i*cw-2,y-h-6,14,6,c2)}
+  for(let i=0;i<n;i++){if(opts.open&&opts.open.includes(i))continue;s+=`<path d="M${x+i*cw+5},${y-h-6} A${cw/2},${cw/2} 0 0 1 ${x+(i+1)*cw+5},${y-h-6}" stroke="${c2}" stroke-width="9" fill="none"/>`}
+  return s}
+function flames(x,y,w,r){let s='';for(let i=0;i<5;i++){const fx=x+i*w/5,h=26+r()*30;s+=`<path d="M${fx},${y} C${fx-6},${y-h*.5} ${fx+8},${y-h*.6} ${fx+3},${y-h} C${fx+14},${y-h*.55} ${fx+14},${y-10} ${fx+w/5},${y}Z" fill="${P.flame}"/><path d="M${fx+5},${y} C${fx+3},${y-h*.4} ${fx+9},${y-h*.45} ${fx+7},${y-h*.7} C${fx+12},${y-h*.4} ${fx+12},${y-6} ${fx+13},${y}Z" fill="${P.flameL}"/>`}return s}
+function tower(x,y,w,h,c){let s=rect(x,y-h,w,h,c);for(let i=0;i<w;i+=w/4)s+=rect(x+i,y-h-8,w/8,8,c);s+=rect(x+w*.4,y-h*.6,w*.2,h*.18,P.black,.55);return s}
+
+const SCENES={
+'paradiso-condiviso':{cap:'La Madre, Vha-El ed Egli edificano con i Beati il paradiso',seed:11,paint(r){
+  let s=rect(0,0,800,300,P.gold);
+  for(let i=0;i<220;i++)s+=`<circle cx="${r()*800}" cy="${r()*290}" r="1.2" fill="${P.goldD}" opacity=".35"/>`;
+  s+=rect(0,300,800,150,P.green)+rect(0,300,800,10,P.greenL);
+  for(let i=0;i<70;i++)s+=`<circle cx="${r()*800}" cy="${318+r()*120}" r="${1.5+r()*2}" fill="${[P.white,P.rose,P.flameL][i%3]}" opacity=".8"/>`;
+  s+=`<ellipse cx="420" cy="210" rx="100" ry="160" fill="${P.skyL}" stroke="${P.goldD}" stroke-width="3"/>`+rays(420,210,28,105,150,P.goldD,1.3);
+  s+=arcade(40,330,4,46,150,{open:[3],missing:[4]})+`<path d="M196,330 L196,150 M226,330 L226,165 M190,250 L232,250 M190,200 L232,200" stroke="${P.brownL}" stroke-width="3"/>`;
+  s+=rect(200,240,22,10,P.rockL);
+  s+=fig({x:212,y:240,s:.62,robe:P.white,mantle:P.rose,wings:true,halo:true,pose:'stand'});
+  s+=fig({x:300,y:385,s:1.45,robe:P.white,mantle:P.rose,wings:true,halo:true,pose:'point',flip:true,hair:'long'});
+  s+=fig({x:420,y:390,s:1.95,robe:P.red,mantle:P.blue,halo:'rays',pose:'orant',hair:'long',hairC:P.brown});
+  s+=fig({x:545,y:385,s:1.4,robe:P.redD,mantle:P.violet,halo:true,pose:'stand',hairC:P.black});
+  [[640,355],[695,365],[750,355],[668,420],[728,425]].forEach(([x,y],i)=>s+=fig({x,y,s:.85,robe:i%2?P.white:P.rose,mantle:i%2?P.skyL:P.white,wings:true,halo:true,pose:'pray',hair:'long'}));
+  return s}},
+'deicidio':{cap:'Il Deicidio: Egli si leva contro la Madre, Vha-El si dispera',seed:23,paint(r){
+  let s=rect(0,0,800,450,P.night)+stars(60,r,260);
+  s+=`<g transform="translate(120,90) rotate(-18)">${arcade(0,60,2,44,50,{c:P.white,c2:P.rose})}</g><g transform="translate(560,60) rotate(22)">${arcade(0,60,2,44,50,{c:P.white,c2:P.rose,missing:[2]})}</g>`;
+  s+=rect(0,390,800,60,P.black)+rect(0,388,800,4,P.redD);
+  [[110,190,-30],[200,130,-12],[660,150,20],[730,220,35],[300,80,-5]].forEach(([x,y,rot],i)=>s+=fig({x,y,s:.65,robe:P.white,mantle:i%2?P.rose:P.skyL,wings:true,halo:true,pose:'orant',rot,hair:'long'}));
+  s+=fig({x:190,y:395,s:1.5,robe:P.white,mantle:P.rose,wings:true,halo:true,pose:'grief',hair:'long'});
+  s+=fig({x:480,y:392,s:1.55,robe:P.red,mantle:P.blue,halo:true,pose:'lie',rot:-90,hair:'long',wound:true});
+  s+=fig({x:600,y:395,s:2.15,robe:P.black,mantle:P.redD,halo:'dark',pose:'raise',flip:true,skin:'#C9A28A',hairC:P.black});
+  return s}},
+'battaglia-isola':{cap:'Sull’isola Vha-El affronta Egli con la Lancia; Ceius suona il corno',seed:37,paint(r){
+  let s=rect(0,0,800,230,P.sky)+rect(0,228,800,222,P.sea)+waves(250,440,r);
+  s+=rock(-20,452,420,150)+rock(330,452,500,135)+rock(0,320,250,90);
+  s+=fig({x:150,y:318,s:1.15,robe:P.red,mantle:P.blue,halo:true,pose:'lie',rot:-90,hair:'long',wound:true});
+  s+=fig({x:60,y:285,s:.8,robe:P.white,mantle:P.skyL,wings:true,halo:true,pose:'spear'})+fig({x:120,y:282,s:.8,robe:P.rose,mantle:P.white,wings:true,halo:true,pose:'spear'});
+  [[205,395],[245,400]].forEach(([x,y])=>s+=fig({x,y,s:1.05,robe:P.white,mantle:P.steel,wings:true,halo:true,pose:'spear',helmet:true}));
+  s+=fig({x:310,y:400,s:1.25,robe:P.red,mantle:P.ochre,wings:true,halo:true,pose:'horn'});
+  s+=fig({x:420,y:400,s:1.6,robe:P.white,mantle:P.rose,wings:true,halo:true,pose:'lance',hair:'long'});
+  s+=fig({x:640,y:405,s:2.25,robe:P.black,mantle:P.redD,halo:'dark',pose:'raise',flip:true,skin:'#C9A28A',hairC:P.black});
+  return s}},
+'esilio-egli':{cap:'La Madre scaccia Egli nelle profondità e divide il suo spirito in tre',seed:41,paint(r){
+  let s=rect(0,0,800,450,P.sky)+rays(300,150,40,60,330,P.gold,2.2)+`<circle cx="300" cy="150" r="150" fill="${P.gold}" opacity=".9"/><circle cx="300" cy="150" r="128" fill="none" stroke="${P.goldD}" stroke-width="2" stroke-dasharray="2 5"/>`;
+  s+=rock(120,452,360,190)+rock(-30,452,200,80);
+  s+=fig({x:300,y:280,s:1.8,robe:P.red,mantle:P.blue,halo:'rays',pose:'orant',hair:'long'});
+  [[235,60],[300,40],[365,60]].forEach(([x,y])=>s+=rays(x,y,12,6,16,P.white,2)+`<circle cx="${x}" cy="${y}" r="8" fill="${P.white}"/><circle cx="${x}" cy="${y}" r="4" fill="${P.flameL}"/>`);
+  s+=`<ellipse cx="610" cy="430" rx="170" ry="54" fill="${P.black}" stroke="${P.redD}" stroke-width="5"/>`+flames(470,440,280,r);
+  s+=fig({x:640,y:250,s:1.5,robe:P.black,mantle:P.redD,halo:'dark',pose:'orant',rot:168,skin:'#C9A28A',hairC:P.black});
+  s+=fig({x:70,y:395,s:1,robe:P.white,mantle:P.skyL,wings:true,halo:true,pose:'kneel',hair:'long'})+fig({x:130,y:400,s:1,robe:P.rose,mantle:P.white,wings:true,halo:true,pose:'kneel'});
+  return s}},
+'guerra-fratricida':{cap:'La Grande Guerra Fratricida: i signori della guerra si affrontano tra le città in fiamme',seed:53,paint(r){
+  let s=rect(0,0,800,300,P.dusk)+rect(0,0,800,90,P.redD,.35);
+  s+=tower(250,300,60,150,P.rockL)+tower(330,300,80,190,P.white)+tower(430,300,60,130,P.rockL)+rect(240,250,260,50,P.rose);
+  s+=flames(250,150,60,r)+flames(335,110,70,r)+flames(430,170,60,r);
+  s+=`<path d="M300,120 C280,60 340,40 320,0 L380,0 C400,50 350,70 370,110Z" fill="${P.smoke}" opacity=".55"/>`;
+  s+=rect(0,300,800,150,P.earth)+rect(0,300,800,8,P.ochre);
+  s+=fig({x:350,y:420,s:1,robe:P.brown,mantle:P.ochre,pose:'lie',rot:-90,helmet:true})+fig({x:470,y:430,s:1,robe:P.green,mantle:P.brownL,pose:'lie',rot:90,helmet:true});
+  [[60,400],[120,410],[180,400]].forEach(([x,y],i)=>s+=fig({x,y,s:1.1,robe:[P.red,P.ochre,P.brown][i],mantle:P.brownL,pose:'spear',helmet:true,shield:P.red}));
+  s+=fig({x:250,y:410,s:1.25,robe:P.red,mantle:P.ochre,pose:'thrust',helmet:true,shield:P.red,crown:false});
+  [[740,400],[680,410],[620,400]].forEach(([x,y],i)=>s+=fig({x,y,s:1.1,robe:[P.green,P.blue,P.violet][i],mantle:P.steel,pose:'spear',helmet:true,shield:P.blue,flip:true}));
+  s+=fig({x:560,y:410,s:1.25,robe:P.blue,mantle:P.greenL,pose:'thrust',helmet:true,shield:P.blue,flip:true});
+  return s}},
+'comparsa-primogenito':{cap:'La Comparsa del Primogenito: una grande quiete ferma le armi',seed:67,paint(r){
+  let s=rect(0,0,800,320,P.sky)+rays(400,90,48,30,420,P.gold,2)+`<circle cx="400" cy="90" r="46" fill="${P.gold}"/><circle cx="400" cy="90" r="30" fill="${P.flameL}"/><circle cx="400" cy="90" r="14" fill="${P.white}"/>`;
+  s+=rect(0,320,800,130,P.greenL)+rect(0,320,800,8,P.green);
+  s+=`<path d="M300,432 L520,428 M330,442 L560,440 M600,430 L760,436" stroke="${P.brownL}" stroke-width="3"/><circle cx="420" cy="412" r="12" fill="${P.red}" stroke="${P.black}" stroke-opacity=".5"/><circle cx="660" cy="415" r="12" fill="${P.blue}" stroke="${P.black}" stroke-opacity=".5"/>`;
+  s+=fig({x:80,y:395,s:1.2,robe:P.brown,mantle:P.brownL,hair:'tonsure',pose:'point'})+fig({x:150,y:400,s:1.15,robe:P.brownL,mantle:P.ochre,hair:'tonsure',pose:'pray'})+fig({x:215,y:398,s:1.1,robe:P.brown,mantle:P.white,hair:'tonsure',pose:'orant'});
+  [[380,392,P.red],[460,396,P.ochre],[540,392,P.green],[620,396,P.blue],[700,392,P.violet]].forEach(([x,y,c],i)=>s+=fig({x,y,s:1.05,robe:c,mantle:P.brownL,pose:'kneel',helmet:true,flip:i>2}));
+  return s}}
+};
+SCENES['era-antica']=SCENES['paradiso-condiviso'];
+
+function affresco(id,small){
+  const sc=SCENES[id];if(!sc)return null;
+  const u='f'+id.replace(/[^a-z0-9]/g,'')+(small?'s':'');const r=rng(sc.seed);
+  let cracks='';for(let i=0;i<4;i++){let x=40+r()*720,y=30+r()*390,d=`M${x.toFixed(1)},${y.toFixed(1)}`;for(let j=0;j<7;j++){x+=(r()-.5)*60;y+=(r()-.3)*30;d+=` L${x.toFixed(1)},${y.toFixed(1)}`}cracks+=`<path d="${d}" stroke="#4d3d2c" stroke-width=".9" fill="none" opacity=".4"/>`}
+  const svg=`<svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Affresco: ${sc.cap}">
+<defs>
+<clipPath id="${u}c"><rect x="16" y="16" width="768" height="418"/></clipPath>
+<filter id="${u}w"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="2" seed="${sc.seed}"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+<filter id="${u}g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="${sc.seed+1}"/><feColorMatrix values="0 0 0 0 .32 0 0 0 0 .24 0 0 0 0 .16 0 0 0 -1.6 1.2"/></filter>
+<filter id="${u}f" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="${sc.seed+2}"/><feColorMatrix values="0 0 0 0 .93 0 0 0 0 .89 0 0 0 0 .80 18 0 0 0 -12.4"/></filter>
+<filter id="${u}e"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="${sc.seed+3}"/><feDisplacementMap in="SourceGraphic" scale="34"/></filter>
+<pattern id="${u}b" width="32" height="16" patternUnits="userSpaceOnUse"><rect width="32" height="16" fill="#9C3B2A"/><path d="M16 1.5 L29 8 L16 14.5 L3 8Z" fill="#E9DFC9"/><circle cx="16" cy="8" r="3" fill="#56785A"/></pattern>
+</defs>
+<rect width="800" height="450" fill="url(#${u}b)"/>
+<rect x="14" y="14" width="772" height="422" fill="none" stroke="#3a2a1e" stroke-width="3"/>
+<g clip-path="url(#${u}c)"><g filter="url(#${u}w)">${sc.paint(r)}</g>
+<rect x="16" y="16" width="768" height="418" fill="${P.plaster}" opacity=".14"/>
+<rect x="16" y="16" width="768" height="418" filter="url(#${u}g)" opacity=".28"/>
+<rect x="16" y="16" width="768" height="418" filter="url(#${u}f)" opacity=".32"/>
+<rect x="16" y="16" width="768" height="418" fill="none" stroke="${P.plaster}" stroke-width="22" filter="url(#${u}e)" opacity=".85"/>
+${cracks}</g></svg>`;
+  const fg=el('figure',{class:'affresco'+(small?' small':'')});fg.innerHTML=svg;
+  fg.append(el('figcaption',null,el('span',null,'Affresco'),' · '+sc.cap));
+  return fg;
+}
+
+/* ---------- editor (solo proprietario) ---------- */
+function slug(s){return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'voce'}
+function viewEditor(id){
+  if(!S.owner)return;
+  const e=id?entry(id):null;const isNew=!e;
+  renderNav(e?e.tipo:null);
+  const f=el('form',{class:'editor view'});
+  f.append(el('p',{class:'eyebrow'},isNew?'Nuova voce':'Modifica voce'),el('h1',null,isNew?'Nuova voce':e.titolo));
+  const row=el('div',{class:'row'},
+    el('label',null,'Titolo',el('input',{id:'ed-titolo',required:true,value:e?e.titolo:''})),
+    el('label',null,'Sezione',(()=>{const s=el('select',{id:'ed-tipo'});TIPI.forEach(t=>s.append(el('option',{value:t.k,selected:e&&e.tipo===t.k},t.sing)));return s})()),
+    el('label',null,'Ordine',el('input',{id:'ed-ordine',type:'number',step:'0.1',value:e&&e.ordine!=null?e.ordine:''})));
+  f.append(row,
+    el('label',null,'Sottotitolo',el('input',{id:'ed-sotto',value:e?e.sottotitolo||'':''})),
+    el('label',null,'Dati in breve (una riga per voce, nel formato Etichetta: valore)',el('textarea',{id:'ed-campi'},e?(e.campi||[]).map(c=>c[0]+': '+c[1]).join('\n'):'')),
+    el('label',null,'Testo (riga vuota tra i paragrafi; per collegare una voce scrivi [[id]] o [[id|parole]])',el('textarea',{id:'ed-testo'},e?e.testo||'':'')));
+  const chosen=new Set(e?e.link||[]:[]);
+  const filt=el('input',{id:'ed-linkfilter',type:'search',placeholder:'Filtra le voci'});
+  const box=el('div',{class:'linkbox'});
+  const fill=()=>{box.replaceChildren();const q=filt.value.toLowerCase();all().filter(x=>!e||x.id!==e.id).filter(x=>!q||x.titolo.toLowerCase().includes(q)).sort((a,b)=>a.titolo.localeCompare(b.titolo,'it')).forEach(x=>{const cb=el('input',{type:'checkbox',checked:chosen.has(x.id)});cb.addEventListener('change',()=>{cb.checked?chosen.add(x.id):chosen.delete(x.id)});box.append(el('label',{title:x.id},cb,x.titolo))})};
+  filt.addEventListener('input',fill);fill();
+  f.append(el('div',{class:'linkpick'},el('label',{for:'ed-linkfilter'},'Collegamenti'),filt,box));
+  const sec=el('fieldset',{class:'secret'},el('legend',null,'Riservato'),
+    el('div',{class:'radio'},
+      el('label',null,el('input',{type:'radio',name:'vis',value:'pub',checked:!e||!e.privata}),'Voce pubblica'),
+      el('label',null,el('input',{type:'radio',name:'vis',value:'priv',checked:e&&e.privata}),'Voce visibile solo a me')),
+    el('label',null,'Note dell’autore',el('textarea',{id:'ed-note'},e?e.note:'')),
+    el('label',null,'Da definire (una cosa per riga)',el('textarea',{id:'ed-dadef'},e?e.daDefinire.join('\n'):'')));
+  f.append(sec);
+  const msg=el('p',{class:'msg',role:'status'});
+  const acts=el('div',{class:'actions'},el('button',{class:'btn primary',type:'submit'},'Salva'),el('button',{class:'btn',type:'button',onclick:()=>go(e?'#'+e.id:'#')},'Annulla'));
+  if(e){const del=el('button',{class:'btn danger',type:'button'},'Elimina voce');
+    del.addEventListener('click',()=>{const c=el('div',{class:'confirm'},el('span',null,'Eliminare “'+e.titolo+'”? Non si può annullare.'),
+      el('button',{class:'btn danger',type:'button',onclick:async()=>{try{await S.db.doc('codex/main/voci/'+e.id).delete().catch(()=>{});await S.db.doc('riservato/main/voci/'+e.id).delete().catch(()=>{});go('#sez-'+e.tipo)}catch(err){msg.className='msg err';msg.textContent='Eliminazione non riuscita: '+(err.message||err.code)}}},'Sì, elimina'),
+      el('button',{class:'btn',type:'button',onclick:()=>c.remove()},'No'));acts.after(c)});acts.append(del)}
+  f.append(acts,msg);
+  f.addEventListener('submit',async ev=>{ev.preventDefault();
+    const titolo=$('#ed-titolo').value.trim();if(!titolo){msg.className='msg err';msg.textContent='Serve un titolo.';return}
+    let nid=e?e.id:slug(titolo);if(!e){let i=2;const base=nid;while(entry(nid))nid=base+'-'+i++}
+    const ord=$('#ed-ordine').value;
+    const data={titolo,tipo:$('#ed-tipo').value,sottotitolo:$('#ed-sotto').value.trim(),ordine:ord===''?null:Number(ord),
+      campi:$('#ed-campi').value.split('\n').map(l=>{const i=l.indexOf(':');return i>0?[l.slice(0,i).trim(),l.slice(i+1).trim()]:null}).filter(c=>c&&c[0]&&c[1]),
+      testo:$('#ed-testo').value.trim(),link:[...chosen]};
+    const priv=f.querySelector('input[name=vis]:checked').value==='priv';
+    const riserv={note:$('#ed-note').value.trim(),daDefinire:$('#ed-dadef').value.split('\n').map(s=>s.trim()).filter(Boolean)};
+    msg.className='msg';msg.textContent='Salvataggio…';
+    try{
+      if(priv){await S.db.doc('riservato/main/voci/'+nid).set(Object.assign({},data,riserv,{privata:true}));if(S.pub.has(nid))await S.db.doc('codex/main/voci/'+nid).delete()}
+      else{await S.db.doc('codex/main/voci/'+nid).set(data);await S.db.doc('riservato/main/voci/'+nid).set(riserv)}
+      go('#'+nid);
+    }catch(err){msg.className='msg err';msg.textContent='Non salvato: '+(err.message||err.code||'errore sconosciuto')+'. Il testo resta nel modulo.'}
+  });
+  $('#main').replaceChildren(f);$('#ed-titolo').focus();
+}
+
+/* ---------- routing ---------- */
+function render(){
+  const h=decodeURIComponent(location.hash.slice(1));
+  const q=$('#search').value.trim();
+  if(q){viewSearch(q);return}
+  if(!h)viewHome();
+  else if(h.startsWith('sez-')){const t=TIPO[h.slice(4)];if(t)listView(byTipo(t.k),t.label,t.desc,t.k);else viewHome()}
+  else viewEntry(h);
+}
+let editing=false;
+window.addEventListener('hashchange',()=>{editing=false;$('#search').value='';render();window.scrollTo(0,0)});
+$('#search').addEventListener('input',render);
+$('#home-link').addEventListener('click',ev=>{ev.preventDefault();$('#search').value='';go('#')});
+
+document.addEventListener('submit',()=>{editing=false},true);
+const rerender=()=>{if(document.querySelector('form.editor'))return;render()};
+
+S.ready=true;
+render();
+})();
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body>
+</html>
